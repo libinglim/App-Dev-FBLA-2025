@@ -1,13 +1,10 @@
-import 'dart:async';
-import 'dart:math';
-
 import 'package:flutter/material.dart';
-import 'package:app/main.dart';
+import 'package:app/wheel.dart';
 
 class SignInPage extends StatefulWidget {
   @override
   State<SignInPage> createState() => SignInPageState();
- 
+
   SignInPage({Key? key}) : super(key: key);
 }
 
@@ -23,6 +20,7 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
 
   @override
   initState() {
+    super.initState();
     userName = TextEditingController();
     passWord = TextEditingController();
     inputModerator = '';
@@ -33,115 +31,141 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
       curve: Curves.easeIn,
     );
     controller.repeat();
-    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // Dispose controllers to avoid memory leaks
+    userName.dispose();
+    passWord.dispose();
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage("images/background.png"),
-                  fit: BoxFit.cover),
-            ),
-            child: SingleChildScrollView(
-                child: Container(
-                    padding: EdgeInsets.all(20),
-                    child: Form(
-                        key: _formKey,
-                        child: Builder(builder: (ctx) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: 80),
-                              Text(
-                                //Welcome letter to be friendly to returning students.
-                                "Welcome back.",
-                                style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+      body: Container(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.all(20),
+            child: Form(
+              key: _formKey,
+              child: Builder(builder: (ctx) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 80),
+                    Text(
+                      "Welcome back.",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      "Sign in to continue",
+                      style: TextStyle(fontSize: 18, color: Colors.black),
+                    ),
+                    SizedBox(height: 40),
+                    TextFormField(
+                      controller: userName,
+                      decoration: InputDecoration(
+                        hintText: "Enter your username...",
+                        fillColor: Colors.white,
+                        filled: true,
+                        border: OutlineInputBorder(),
+                        prefixIcon: Icon(Icons.person),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your username';
+                        } else {
+                          return null;
+                        }
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    FormField<bool>(
+                      initialValue: true,
+                      builder: (state) {
+                        return TextFormField(
+                          controller: passWord,
+                          obscureText: state.value!,
+                          decoration: InputDecoration(
+                            hintText: "Enter your passcode...",
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                state.value!
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
                               ),
-                              SizedBox(height: 10),
-                              Text(
-                                //Creating text box for Sign In. Various widget created to make the page user friendly.
-                                "Sign in to continue",
-                                style: TextStyle(
-                                    fontSize: 18, color: Colors.black),
-                              ),
-                              SizedBox(height: 40),
-                              TextFormField(
-                                controller: userName,
-                                decoration: InputDecoration(
-                                  hintText: "Enter your username. . .",
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(),
-                                  prefixIcon: Icon(Icons.person),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please enter your username';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                              SizedBox(
-                                  height: 20), //Creating text box for password.
-                              FormField<bool>(
-                                initialValue: true,
-                                builder: (state) {
-                                  return TextFormField(
-                                    controller: passWord,
-                                    obscureText: state.value!,
-                                    decoration: InputDecoration(
-                                      hintText: "Enter your passcode. . .",
-                                      fillColor: Colors.white,
-                                      filled: true,
-                                      border: OutlineInputBorder(),
-                                      prefixIcon: Icon(Icons.lock),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          state.value!
-                                              ? Icons.visibility_off
-                                              : Icons.visibility,
-                                          color: Colors.grey,
-                                        ),
-                                        onPressed: () {
-                                          state.didChange(!state.value!);
-                                        },
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      //Validating if the passcode match one in the server
-                                      if (value == null || value.isEmpty) {
-                                        return 'Please enter your password';
-                                      } else if (value.length < 8) {
-                                        return 'Password must be at least 8 characters';
-                                      } else {
-                                        return null;
-                                      }
-                                    },
-                                  );
-                                }, //
-                              ),
-                              SizedBox(height: 40),
-                              
-                              SizedBox(height: 10),
-                              Text(
-                                inputModerator,
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              SizedBox(
-                                height: 90,
-                              ),
-                              
-                            ],
+                              onPressed: () {
+                                state.didChange(!state.value!);
+                              },
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            } else if (value.length < 8) {
+                              return 'Password must be at least 8 characters';
+                            } else {
+                              return null;
+                            }
+                          },
+                        );
+                      },
+                    ),
+                    SizedBox(height: 40),
+                    
+                    ElevatedButton(
+                      
+                      onPressed: () {
+                        
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => WheelPage(),
+                            ),
                           );
-                        }))))));
+                        
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: Text(
+                        'Sign In',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      inputModerator,
+                      style: TextStyle(color: Colors.red),
+                    ),
+                    SizedBox(height: 90),
+                  ],
+                );
+              }),
+            ),
+          ),
+        ),
+      ),
+    );
   }
-
-  
 }
