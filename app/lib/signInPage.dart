@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:app/wheel.dart';
+import 'package:app/profilePage.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -125,18 +126,14 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                       },
                     ),
                     SizedBox(height: 40),
-                    
                     ElevatedButton(
-                      
                       onPressed: () {
-                        
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => WheelPage(),
-                            ),
-                          );
-                        
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => ProfilePage(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
                         padding:
