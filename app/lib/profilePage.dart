@@ -1,6 +1,8 @@
 import 'package:app/signInPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:app/inventoryPage.dart';
+import 'package:app/wheel.dart';
 
 import 'package:flutter/widgets.dart';
 
@@ -15,9 +17,9 @@ class _ProfilePageState extends State<ProfilePage>
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    ProfilePage(), // Profile page
-    Placeholder(), // Placeholder for Home
-    Placeholder(), // Placeholder for Settings
+    ProfilePage(),
+    InventoryPage(),
+    WheelPage(),
   ];
 
   @override
@@ -211,7 +213,6 @@ class _ProfilePageState extends State<ProfilePage>
           setState(() {
             _currentIndex = index;
           });
-          // Navigate to the selected page
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -221,9 +222,12 @@ class _ProfilePageState extends State<ProfilePage>
         },
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings'),
+              icon: Icon(Icons.add_box_outlined), label: 'Inventory'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.circle_rounded), label: 'Wheel'),
+          //BottomNavigationBarItem(
+          //icon: Icon(Icons.question_mark_outlined), label: 'Quests'),
         ],
       ),
     );
