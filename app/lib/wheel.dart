@@ -1,10 +1,14 @@
+import 'package:app/questions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:confetti/confetti.dart';
+import 'questions.dart';
 
 class WheelPage extends StatefulWidget {
+  const WheelPage({super.key});
+
   @override
   State<WheelPage> createState() => _WheelPageState();
 }
@@ -16,17 +20,18 @@ class _WheelPageState extends State<WheelPage> {
     'Prize 3',
     'Prize 4',
     'Prize 5',
+    'Prize 6',
   ];
 
   final StreamController<int> selected = StreamController<int>();
-  late ConfettiController confettiController; // Ensure this is initialized
+  late ConfettiController confettiController;
   int selectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
     confettiController =
-        ConfettiController(duration: const Duration(seconds: 3)); // Proper initialization
+        ConfettiController(duration: const Duration(seconds: 3));
   }
 
   @override
@@ -41,25 +46,22 @@ class _WheelPageState extends State<WheelPage> {
     selectedIndex = random.nextInt(items.length);
     selected.add(selectedIndex);
 
-    // Delay to allow the wheel animation to complete
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
-        // Play confetti
         confettiController.play();
 
-        // Show alert dialog
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: Text('Congratulations!'),
+            title: const Text('Congratulations!'),
             content: Text('You won: ${items[selectedIndex]}'),
             actions: [
               TextButton(
                 onPressed: () {
-                  confettiController.stop(); // Stop confetti on dialog close
+                  confettiController.stop();
                   Navigator.of(context).pop();
                 },
-                child: Text('OK'),
+                child: const Text('OK'),
               ),
             ],
           ),
@@ -72,7 +74,7 @@ class _WheelPageState extends State<WheelPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fortune Wheel'),
+        title: const Text('Fortune Wheel'),
       ),
       body: Stack(
         children: [
@@ -82,23 +84,44 @@ class _WheelPageState extends State<WheelPage> {
               Expanded(
                 child: FortuneWheel(
                   selected: selected.stream,
+                  animateFirst: false,
                   items: [
-                    for (var item in items)
+                    for (int i = 0; i < items.length; i++)
                       FortuneItem(
-                        child: Text(item),
+                        child: Text(
+                          items[i],
+                          style: const TextStyle(
+                            color: Colors.white, // Text color for readability
+                          ),
+                        ),
+                        style: FortuneItemStyle(
+                          color: i.isEven
+                              ? Colors.green
+                              : Colors.amber, // Alternate green and gold
+                          borderColor: Colors.white,
+                          borderWidth: 3,
+                        ),
                       ),
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: spinWheel,
-                child: Text('Spin the Wheel'),
+                child: const Text('Spin the Wheel'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Questions()),
+                  );
+                },
+                child: const Text('Go to Page'),
+              )
             ],
           ),
-          // Confetti widget
           Align(
             alignment: Alignment.topCenter,
             child: ConfettiWidget(
