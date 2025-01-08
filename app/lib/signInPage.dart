@@ -1,3 +1,4 @@
+import 'package:app/homePage.dart';
 import 'package:flutter/material.dart';
 import 'package:app/wheel.dart';
 import 'package:app/profilePage.dart';
@@ -131,7 +132,7 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProfilePage(),
+                            builder: (context) => HomePage(),
                           ),
                         );
                       },

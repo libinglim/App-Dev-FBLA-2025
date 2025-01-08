@@ -1,10 +1,8 @@
-import 'package:app/questions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:confetti/confetti.dart';
-import 'questions.dart';
 
 class WheelPage extends StatefulWidget {
   const WheelPage({super.key});
@@ -111,7 +109,7 @@ class _WheelPageState extends State<WheelPage> {
                 child: const Text('Spin the Wheel'),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              /*ElevatedButton(
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -119,7 +117,7 @@ class _WheelPageState extends State<WheelPage> {
                   );
                 },
                 child: const Text('Go to Page'),
-              )
+              )*/
             ],
           ),
           Align(

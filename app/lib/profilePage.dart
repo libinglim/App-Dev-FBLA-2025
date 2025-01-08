@@ -1,3 +1,4 @@
+import 'package:app/homePage.dart';
 import 'package:app/signInPage.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui';
@@ -207,7 +208,7 @@ class _ProfilePageState extends State<ProfilePage>
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      /*bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (int index) {
           setState(() {
@@ -229,7 +230,7 @@ class _ProfilePageState extends State<ProfilePage>
           //BottomNavigationBarItem(
           //icon: Icon(Icons.question_mark_outlined), label: 'Quests'),
         ],
-      ),
+      ),*/
     );
   }
 }
