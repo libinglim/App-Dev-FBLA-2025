@@ -10,7 +10,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
+class HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -27,12 +28,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
     _animation = Tween<double>(begin: 1.0, end: 1.2).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     )..addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _controller.reverse(); // Reverse the animation when completed
-      } else if (status == AnimationStatus.dismissed) {
-        Future.delayed(Duration(seconds: 5)).then((value) => _controller.forward()); // Restart the bounce when dismissed
-      }
-    });
+        if (status == AnimationStatus.completed) {
+          _controller.reverse(); // Reverse the animation when completed
+        } else if (status == AnimationStatus.dismissed) {
+          Future.delayed(Duration(seconds: 5)).then((value) =>
+              _controller.forward()); // Restart the bounce when dismissed
+        }
+      });
 
     _controller.forward(); // Start the animation immediately
   }
@@ -42,6 +44,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
     _controller.dispose(); // Dispose of the controller to free resources
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,7 +139,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                 top: 130,
                 // Adjust this value to move the robot closer to the speech bubble
                 child: Image.asset(
-                  'images/robot.png', // Replace with your robot base image
+                  'images/OvalRobot.png', // Replace with your robot base image
                   height: 300,
                 ),
               ),
@@ -172,9 +175,12 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                           size: 24,
                           color: Colors.white,
                         ),
-                        label: Text('Profile', style: TextStyle(color: Colors.white)),
+                        label: Text('Profile',
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10), backgroundColor: Colors.blueAccent, // Button color
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          backgroundColor: Colors.blueAccent, // Button color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -203,9 +209,12 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin{
                           size: 24,
                           color: Colors.white,
                         ),
-                        label: Text('Inventory', style: TextStyle(color: Colors.white)),
+                        label: Text('Inventory',
+                            style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10), backgroundColor: Colors.green, // Button color
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          backgroundColor: Colors.green, // Button color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),

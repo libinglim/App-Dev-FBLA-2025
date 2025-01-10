@@ -53,13 +53,14 @@ class _ProfilePageState extends State<ProfilePage>
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Divider(),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: 50,
-                    backgroundImage: AssetImage('assets/profile_picture.jpg'),
+                    radius: 60,
+                    backgroundImage: AssetImage('images/OvalRobot.png'),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
@@ -68,6 +69,25 @@ class _ProfilePageState extends State<ProfilePage>
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
+                            Column(
+                              children: const [
+                                Text(
+                                  '15',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Text(
+                                  'Level',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ],
+                            ),
                             Column(
                               children: const [
                                 Text(
@@ -124,25 +144,6 @@ class _ProfilePageState extends State<ProfilePage>
                                   ),
                                 ),
                               ],
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  // Edit profile logic
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                ),
-                                child: const Text("Edit Profile"),
-                              ),
                             ),
                           ],
                         ),

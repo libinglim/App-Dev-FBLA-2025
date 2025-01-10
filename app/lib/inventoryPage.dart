@@ -6,6 +6,10 @@ class InventoryPage extends StatefulWidget {
 }
 
 class _InventoryPageState extends State<InventoryPage> {
+  final List<String> inventory = [
+    'images/OvalRobot.png',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +25,7 @@ class _InventoryPageState extends State<InventoryPage> {
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2, // Number of items per row
+                  crossAxisCount: 3, // Number of items per row
                   mainAxisSpacing: 10,
                   crossAxisSpacing: 10,
                   childAspectRatio: 0.75, // Adjust item height/width ratio
@@ -30,8 +34,7 @@ class _InventoryPageState extends State<InventoryPage> {
                 itemBuilder: (context, index) {
                   return InventoryItemCard(
                     itemName: 'Item ${index + 1}',
-                    imagePath:
-                        'assets/item_placeholder.png', // Replace with actual image
+                    imagePath: inventory[0], // Replace with actual image
                   );
                 },
               ),
