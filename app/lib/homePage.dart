@@ -2,6 +2,7 @@ import 'package:app/inventoryPage.dart';
 import 'package:app/profilePage.dart';
 import 'package:app/wheel.dart';
 import 'package:app/shop.dart'; // Import your shop page
+import 'package:app/questions.dart'; // Import your questions page
 import 'package:flutter/material.dart';
 
 int coins = 0; // Global variable for coins
@@ -149,7 +150,15 @@ class HomePageState extends State<HomePage>
               Positioned(
                 top: 480,
                 // Adjust this value to move the robot closer to the speech bubble
-                child: _buildMenuButton('Answer Questions!', Icons.play_arrow),
+                child:
+                    _buildMenuButton('Answer Questions!', Icons.play_arrow, () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => QuestionsPage(),
+                    ),
+                  );
+                }),
               ),
             ],
           ),
@@ -309,14 +318,11 @@ class HomePageState extends State<HomePage>
     );
   }
 
-  Widget _buildMenuButton(String label, IconData icon) {
+  Widget _buildMenuButton(String label, IconData icon, VoidCallback onPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ElevatedButton.icon(
-        onPressed: () {
-          // Handle button actions
-          print('$label button pressed');
-        },
+        onPressed: onPressed,
         icon: Icon(icon, size: 24),
         label: Text(label, style: const TextStyle(fontSize: 20)),
         style: ElevatedButton.styleFrom(
