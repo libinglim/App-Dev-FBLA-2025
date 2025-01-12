@@ -1,7 +1,10 @@
 import 'package:app/inventoryPage.dart';
 import 'package:app/profilePage.dart';
 import 'package:app/wheel.dart';
+import 'package:app/shop.dart'; // Import your shop page
 import 'package:flutter/material.dart';
+
+int coins = 0; // Global variable for coins
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -85,7 +88,7 @@ class HomePageState extends State<HomePage>
                   ),
                   SizedBox(width: 5),
                   Text(
-                    '100000', // Display the amount of gold
+                    '$coins', // Display the amount of gold (global coins variable)
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -215,6 +218,41 @@ class HomePageState extends State<HomePage>
                           padding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
                           backgroundColor: Colors.green, // Button color
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                // Shop Button
+                SizedBox(height: 20),
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _animation.value,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopPage(), // Shop Page
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          Icons.store, // Store icon for the shop
+                          size: 24,
+                          color: Colors.white,
+                        ),
+                        label:
+                            Text('Shop', style: TextStyle(color: Colors.white)),
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 10),
+                          backgroundColor: Colors.yellow, // Button color
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
