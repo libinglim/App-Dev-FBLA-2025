@@ -36,7 +36,7 @@ class ShopPageState extends State<ShopPage> {
       Item('Calculator', 'images/Calculator.png', 15000),
       Item('Candy Cane', 'images/CandyCane.png', 6000),
       Item('Cane', 'images/Cane.png', 10000),
-      Item('Carrot', 'images/Carrot.png', 5000),
+      Item('Carrot', 'images/Carrot.png', 100),
       Item('Positive Sign', 'images/PositiveSign.png', 12000),
     ],
   };
@@ -244,6 +244,9 @@ class ShopPageState extends State<ShopPage> {
                       Globals.coins -=
                           item.price; // Subtract the item price from the coins
                       item.isPurchased = true; // Mark the item as purchased
+                      // Add the item to the inventory
+                      Globals.inventory.add(
+                          item.image); // Add the item's image to the inventory
                     });
                     Navigator.pop(context);
                     _showSuccessDialog(context, item);

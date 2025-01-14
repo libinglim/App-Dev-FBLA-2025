@@ -13,15 +13,6 @@ class WheelPage extends StatefulWidget {
 }
 
 class _WheelPageState extends State<WheelPage> {
-  final List<String> items = [
-    'images/Scarf.png',
-    'images/SantaHat.png',
-    'images/Monocle.png',
-    'images/RadGlasses.png',
-    'images/Ruler.png',
-    'images/TopHat.png',
-  ];
-
   final StreamController<int> selected = StreamController<int>();
   late ConfettiController confettiController;
   bool isBackButtonHovered = false;
@@ -33,6 +24,17 @@ class _WheelPageState extends State<WheelPage> {
     super.initState();
     confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
+
+    if (Globals.availableItems.isEmpty) {
+      Globals.availableItems = [
+        'images/Scarf.png',
+        'images/SantaHat.png',
+        'images/Monocle.png',
+        'images/RadGlasses.png',
+        'images/Ruler.png',
+        'images/TopHat.png',
+      ];
+    }
   }
 
   @override
@@ -43,18 +45,22 @@ class _WheelPageState extends State<WheelPage> {
   }
 
   void spinWheel() {
-    if (Globals.spins > 0) {
+    if (Globals.spins > 0 && Globals.availableItems.isNotEmpty) {
       setState(() {
-        Globals.spins--; // Decrease global spins
+        Globals.spins--;
         spinning = true;
       });
 
       final random = Random();
-      selectedIndex = random.nextInt(items.length);
+      selectedIndex = random.nextInt(Globals.availableItems.length);
       selected.add(selectedIndex);
 
       Future.delayed(const Duration(seconds: 5), () {
         if (mounted) {
+          final wonItem = Globals.availableItems[selectedIndex];
+          Globals.inventory.add(wonItem);
+          Globals.availableItems.removeAt(selectedIndex);
+
           confettiController.play();
 
           showDialog(
@@ -78,7 +84,7 @@ class _WheelPageState extends State<WheelPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
-                      '🎉 Congratulations! 🎉',
+                      '🎉 Congratulations! 🎉\nYou Won:',
                       style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -88,8 +94,8 @@ class _WheelPageState extends State<WheelPage> {
                     ),
                     const SizedBox(height: 15),
                     Image.asset(
-                      items[selectedIndex],
-                      height: 100, // Adjust size as needed
+                      wonItem,
+                      height: 100,
                       width: 100,
                     ),
                     const SizedBox(height: 20),
@@ -236,12 +242,14 @@ class _WheelPageState extends State<WheelPage> {
                         selected: selected.stream,
                         animateFirst: false,
                         items: [
-                          for (int i = 0; i < items.length; i++)
+                          for (int i = 0;
+                              i < Globals.availableItems.length;
+                              i++)
                             FortuneItem(
                               child: Image.asset(
-                                items[i],
+                                Globals.availableItems[i],
                                 fit: BoxFit.contain,
-                                height: 50, // Adjust size as needed
+                                height: 50,
                                 width: 50,
                               ),
                               style: FortuneItemStyle(
@@ -257,13 +265,14 @@ class _WheelPageState extends State<WheelPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: Globals.spins > 0
-                      ? () {
-                          if (!spinning) {
-                            spinWheel();
-                          }
-                        }
-                      : null,
+                  onPressed:
+                      Globals.spins > 0 && Globals.availableItems.isNotEmpty
+                          ? () {
+                              if (!spinning) {
+                                spinWheel();
+                              }
+                            }
+                          : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
