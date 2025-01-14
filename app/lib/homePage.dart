@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:app/inventoryPage.dart';
 import 'package:app/profilePage.dart';
 import 'package:app/wheel.dart';
@@ -5,7 +7,8 @@ import 'package:app/shop.dart'; // Import your shop page
 import 'package:app/questions.dart'; // Import your questions page
 import 'package:flutter/material.dart';
 
-int coins = 0; // Global variable for coins
+import 'globals.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,10 +17,18 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage>
-    with SingleTickerProviderStateMixin {
+class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _bounceController;
   late Animation<double> _animation;
+  late double height;
+  late double width;
+  late Animation<double> _bounceAnimation;
+
+  int generateRandomNumber() {
+    Random random = Random();
+    return random.nextInt(6) + 3;
+  }
 
   @override
   void initState() {
@@ -28,29 +39,45 @@ class HomePageState extends State<HomePage>
       vsync: this,
     );
 
+    _bounceController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    )..repeat(reverse: true);
+
     // Animation that makes the buttons bounce up and down
-    _animation = Tween<double>(begin: 1.0, end: 1.2).animate(
+    _animation = Tween<double>(begin: 1.0, end: 1.1).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     )..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           _controller.reverse(); // Reverse the animation when completed
         } else if (status == AnimationStatus.dismissed) {
-          Future.delayed(Duration(seconds: 5)).then((value) =>
-              _controller.forward()); // Restart the bounce when dismissed
+          Future.delayed(Duration(seconds: generateRandomNumber())).then(
+              (value) =>
+                  _controller.forward()); // Restart the bounce when dismissed
         }
       });
 
     _controller.forward(); // Start the animation immediately
+
+    _bounceAnimation = Tween<double>(begin: 0.0, end: 20.0).animate(
+      CurvedAnimation(
+        parent: _bounceController,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // Dispose of the controller to free resources
+    _bounceController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    height = MediaQuery.of(context).size.height;
+    width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Stack(
         children: [
@@ -85,14 +112,15 @@ class HomePageState extends State<HomePage>
                   Icon(
                     Icons.attach_money, // Gold coin icon
                     color: Colors.green[700], // Gold color
-                    size: 24,
+                    size: 50,
                   ),
                   SizedBox(width: 5),
                   Text(
-                    '$coins', // Display the amount of gold (global coins variable)
+                    '${Globals.coins}',
+                    // Display the amount of gold (global coins variable)
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
+                      fontSize: 50,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -121,7 +149,7 @@ class HomePageState extends State<HomePage>
                   child: Text(
                     'Build-A-Bot!',
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 100,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueAccent,
                     ),
@@ -130,7 +158,7 @@ class HomePageState extends State<HomePage>
               ),
               // Tail of the Speech Bubble
               Positioned(
-                top: 90,
+                top: height / 3,
                 child: SizedBox(
                   width: 20,
                   height: 20, // Set the size explicitly
@@ -140,25 +168,44 @@ class HomePageState extends State<HomePage>
                 ),
               ),
               Positioned(
-                top: 130,
-                // Adjust this value to move the robot closer to the speech bubble
-                child: Image.asset(
-                  'images/OvalRobot.png', // Replace with your robot base image
-                  height: 300,
-                ),
-              ),
-              Positioned(
-                top: 480,
-                // Adjust this value to move the robot closer to the speech bubble
-                child:
-                    _buildMenuButton('Answer Questions!', Icons.play_arrow, () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => QuestionsPage(),
+                  top: height / 4,
+                  // Adjust this value to move the robot closer to the speech bubble
+                  child: AnimatedBuilder(
+                    animation: _bounceAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, -_bounceAnimation.value),
+                        child: child,
+                      );
+                    },
+                    child: Image.asset(
+                      'images/OvalRobot.png',
+                      // Replace with your robot base image
+                      height: height / 2,
                     ),
-                  );
-                }),
+                  )),
+              Positioned(
+                bottom: height / 8,
+                // Adjust this value to move the robot closer to the speech bubbl
+                child: AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, child) {
+                    return Transform.scale(
+                      scale: _animation.value,
+                      // Shake horizontally
+                      child: child,
+                    );
+                  },
+                  child: _buildMenuButton('Answer Questions!', Icons.play_arrow,
+                      () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => QuestionsPage(),
+                      ),
+                    );
+                  }),
+                ),
               ),
             ],
           ),
@@ -166,7 +213,7 @@ class HomePageState extends State<HomePage>
             bottom: 20,
             left: 20,
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 AnimatedBuilder(
                   animation: _animation,
@@ -184,11 +231,12 @@ class HomePageState extends State<HomePage>
                         },
                         icon: Icon(
                           Icons.account_box, // Person icon for profile
-                          size: 24,
+                          size: 50,
                           color: Colors.white,
                         ),
                         label: Text('Profile',
-                            style: TextStyle(color: Colors.white)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 50)),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
@@ -218,11 +266,12 @@ class HomePageState extends State<HomePage>
                         },
                         icon: Icon(
                           Icons.card_giftcard, // Bag icon for inventory
-                          size: 24,
+                          size: 50,
                           color: Colors.white,
                         ),
                         label: Text('Inventory',
-                            style: TextStyle(color: Colors.white)),
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 50)),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
@@ -253,11 +302,12 @@ class HomePageState extends State<HomePage>
                         },
                         icon: Icon(
                           Icons.store, // Store icon for the shop
-                          size: 24,
+                          size: 50,
                           color: Colors.white,
                         ),
-                        label:
-                            Text('Shop', style: TextStyle(color: Colors.white)),
+                        label: Text('Shop',
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 50)),
                         style: ElevatedButton.styleFrom(
                           padding: EdgeInsets.symmetric(
                               horizontal: 15, vertical: 10),
@@ -277,7 +327,7 @@ class HomePageState extends State<HomePage>
           // Shiny Spin Button
           Positioned(
             bottom: 20,
-            right: 20,
+            right: -20,
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -296,16 +346,16 @@ class HomePageState extends State<HomePage>
                   boxShadow: [
                     BoxShadow(
                       color: Colors.orange.withOpacity(0.7),
-                      blurRadius: 10,
-                      spreadRadius: 2,
+                      blurRadius: 30,
+                      spreadRadius: 30,
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(75),
                 child: const Text(
                   'Spin!',
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 80,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
@@ -323,8 +373,13 @@ class HomePageState extends State<HomePage>
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: ElevatedButton.icon(
         onPressed: onPressed,
-        icon: Icon(icon, size: 24),
-        label: Text(label, style: const TextStyle(fontSize: 20)),
+        icon: Icon(
+          icon,
+          size: 100,
+          color: Colors.green,
+        ),
+        label: Text(label,
+            style: const TextStyle(fontSize: 50, color: Colors.green)),
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
           shape: RoundedRectangleBorder(

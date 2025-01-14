@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'globals.dart';
+
 // Global variable to keep track of the user's coins
 int coins = 100000; // Initial amount of coins
 
@@ -126,7 +128,7 @@ class ShopPageState extends State<ShopPage> {
                         ),
                         SizedBox(width: 5),
                         Text(
-                          '$coins', // Display the amount of coins
+                          '${Globals.coins}', // Display the amount of coins
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 18,
@@ -159,7 +161,7 @@ class ShopPageState extends State<ShopPage> {
               SizedBox(height: 10),
               Text('Price: \$${item.price}'),
               SizedBox(height: 10),
-              Text('You have $coins coins available.'),
+              Text('You have ${Globals.coins} coins available.'),
               if (item.isPurchased)
                 Text(
                   'You have already purchased this item.',
@@ -179,9 +181,9 @@ class ShopPageState extends State<ShopPage> {
               TextButton(
                 onPressed: () {
                   // Check if the user has enough coins
-                  if (coins >= item.price) {
+                  if (Globals.coins >= item.price) {
                     setState(() {
-                      coins -=
+                      Globals.coins -=
                           item.price; // Subtract the item price from the coins
                       item.isPurchased = true; // Mark the item as purchased
                     });

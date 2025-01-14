@@ -24,6 +24,7 @@ class _WheelPageState extends State<WheelPage> {
   final StreamController<int> selected = StreamController<int>();
   late ConfettiController confettiController;
   bool isBackButtonHovered = false;
+  bool spinning = false;
   int selectedIndex = 0;
 
   @override
@@ -92,6 +93,7 @@ class _WheelPageState extends State<WheelPage> {
                     onPressed: () {
                       confettiController.stop();
                       Navigator.of(context).pop();
+                      spinning = false;
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
@@ -256,7 +258,12 @@ class _WheelPageState extends State<WheelPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: spinWheel,
+                  onPressed: () {
+                    if (!spinning) {
+                      spinning = true;
+                      spinWheel();
+                    }
+                    },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'globals.dart';
 import 'homePage.dart'; // Import the HomePage
-
-int spins = 0; // Global variable for spins
-int coins = 0; // Global variable for coins
 
 class QuestionsPage extends StatefulWidget {
   const QuestionsPage({Key? key}) : super(key: key);
@@ -49,9 +47,9 @@ class _QuestionsPageState extends State<QuestionsPage> {
   void _checkAnswer(int selectedOption) {
     if (selectedOption == _correctOption) {
       _correctAnswers++;
-      coins += 100;
+      Globals.coins += 100;
       if (_correctAnswers % 10 == 0) {
-        spins++;
+        Globals.spins++;
         _showMessage('Congratulations!', 'You earned +1 Spin!');
       } else {
         _showMessage('Correct!', 'You earned 100 coins!');
@@ -139,7 +137,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                           color: Colors.green[700], size: 24),
                       const SizedBox(width: 5),
                       Text(
-                        '$coins',
+                        '${Globals.coins}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -208,7 +206,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 ),
                 const SizedBox(height: 30),
                 Text(
-                  'Coins: $coins | Spins: $spins',
+                  'Coins: ${Globals.coins} | spins: ${Globals.spins}',
                   style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
