@@ -3,6 +3,7 @@ import 'package:flutter_fortune_wheel/flutter_fortune_wheel.dart';
 import 'dart:math';
 import 'dart:async';
 import 'package:confetti/confetti.dart';
+import 'globals.dart';
 
 class WheelPage extends StatefulWidget {
   const WheelPage({super.key});
@@ -13,12 +14,12 @@ class WheelPage extends StatefulWidget {
 
 class _WheelPageState extends State<WheelPage> {
   final List<String> items = [
-    'Prize 1',
-    'Prize 2',
-    'Prize 3',
-    'Prize 4',
-    'Prize 5',
-    'Prize 6',
+    'images/Scarf.png',
+    'images/SantaHat.png',
+    'images/Monocle.png',
+    'images/RadGlasses.png',
+    'images/Ruler.png',
+    'images/TopHat.png',
   ];
 
   final StreamController<int> selected = StreamController<int>();
@@ -42,93 +43,97 @@ class _WheelPageState extends State<WheelPage> {
   }
 
   void spinWheel() {
-    final random = Random();
-    selectedIndex = random.nextInt(items.length);
-    selected.add(selectedIndex);
+    if (Globals.spins > 0) {
+      setState(() {
+        Globals.spins--; // Decrease global spins
+        spinning = true;
+      });
 
-    Future.delayed(const Duration(seconds: 5), () {
-      if (mounted) {
-        confettiController.play();
+      final random = Random();
+      selectedIndex = random.nextInt(items.length);
+      selected.add(selectedIndex);
 
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Colors.deepPurple, Colors.blue],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+      Future.delayed(const Duration(seconds: 5), () {
+        if (mounted) {
+          confettiController.play();
+
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => Dialog(
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    '🎉 Congratulations! 🎉',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [Colors.deepPurple, Colors.blue],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
-                  const SizedBox(height: 15),
-                  Text(
-                    'You won: ${items[selectedIndex]}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      confettiController.stop();
-                      Navigator.of(context).pop();
-                      spinning = false;
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 30,
-                        vertical: 10,
-                      ),
-                      textStyle: const TextStyle(
-                        fontSize: 18,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      '🎉 Congratulations! 🎉',
+                      style: TextStyle(
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    child: const Text('OK'),
-                  ),
-                ],
+                    const SizedBox(height: 15),
+                    Image.asset(
+                      items[selectedIndex],
+                      height: 100, // Adjust size as needed
+                      width: 100,
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {
+                        confettiController.stop();
+                        Navigator.of(context).pop();
+                        setState(() {
+                          spinning = false;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 30,
+                          vertical: 10,
+                        ),
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        );
-      }
-    });
+          );
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        // Center the content
         child: Stack(
           children: [
-            // Gradient Background
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
@@ -138,7 +143,6 @@ class _WheelPageState extends State<WheelPage> {
                 ),
               ),
             ),
-            // Back Button
             Positioned(
               top: 40,
               left: 20,
@@ -184,9 +188,8 @@ class _WheelPageState extends State<WheelPage> {
                 ),
               ),
             ),
-            // Title
             Positioned(
-              top: 30, // Increased top padding
+              top: 30,
               left: 20,
               right: 20,
               child: Container(
@@ -203,7 +206,6 @@ class _WheelPageState extends State<WheelPage> {
                 ),
               ),
             ),
-            // Confetti
             Align(
               alignment: Alignment.topCenter,
               child: Padding(
@@ -222,28 +224,25 @@ class _WheelPageState extends State<WheelPage> {
                 ),
               ),
             ),
-            // Main Content
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 100), // Adjusted space above the wheel
+                const SizedBox(height: 100),
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40.0),
                     child: FractionallySizedBox(
-                      // Increased size factor
                       child: FortuneWheel(
                         selected: selected.stream,
                         animateFirst: false,
                         items: [
                           for (int i = 0; i < items.length; i++)
                             FortuneItem(
-                              child: Text(
+                              child: Image.asset(
                                 items[i],
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                fit: BoxFit.contain,
+                                height: 50, // Adjust size as needed
+                                width: 50,
                               ),
                               style: FortuneItemStyle(
                                 color: i.isEven ? Colors.green : Colors.amber,
@@ -258,12 +257,13 @@ class _WheelPageState extends State<WheelPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
-                  onPressed: () {
-                    if (!spinning) {
-                      spinning = true;
-                      spinWheel();
-                    }
-                    },
+                  onPressed: Globals.spins > 0
+                      ? () {
+                          if (!spinning) {
+                            spinWheel();
+                          }
+                        }
+                      : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 30,
@@ -272,14 +272,17 @@ class _WheelPageState extends State<WheelPage> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    backgroundColor: Colors.orange,
+                    backgroundColor:
+                        Globals.spins > 0 ? Colors.orange : Colors.grey,
                     foregroundColor: Colors.white,
                     textStyle: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  child: const Text('Spin the Wheel'),
+                  child: Text(Globals.spins > 0
+                      ? 'Spin the Wheel (${Globals.spins} left)'
+                      : 'No Spins Left'),
                 ),
                 const SizedBox(height: 40),
               ],
