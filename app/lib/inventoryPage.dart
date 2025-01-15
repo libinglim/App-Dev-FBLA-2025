@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'globals.dart';
 
 class InventoryPage extends StatefulWidget {
   @override
@@ -6,48 +7,57 @@ class InventoryPage extends StatefulWidget {
 }
 
 class _InventoryPageState extends State<InventoryPage> {
-  final List<String> inventory = [
-    'images/OvalRobot.png',
-    'images/robot.png',
-    'images/FemaleRobot.png',
-    'images/RadRobot.png',
-    'images/SquareRobot.png',
-    'images/WinkingRobot.png',
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Your Inventory'),
+        title: const Text(
+          'Your Inventory',
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF1D2671),
+                Color(0xFFC33764)
+              ], // Gradient matching HomePage
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 5,
       ),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [Colors.blueAccent, Colors.purpleAccent],
+            colors: [
+              Color(0xFF1D2671),
+              Color(0xFFC33764)
+            ], // Gradient matching HomePage
           ),
         ),
         child: Column(
           children: [
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(12.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                    childAspectRatio: 0.75,
+                    crossAxisCount: 2, // Number of cards per row
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.6, // Adjusted aspect ratio
                   ),
-                  itemCount:
-                      inventory.length, // Limit to number of inventory items
+                  itemCount: Globals.inventory.length,
                   itemBuilder: (context, index) {
                     return InventoryItemCard(
-                      itemName: 'Robot ${index + 1}',
-                      imagePath: inventory[index],
+                      itemName: 'Item ${index + 1}',
+                      imagePath: Globals.inventory[index],
                     );
                   },
                 ),
@@ -74,67 +84,150 @@ class InventoryItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        showDialog(
-          context: context,
-          builder: (context) => Dialog(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.asset(
-                    imagePath,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    itemName,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: const Text("Close"),
-                ),
-              ],
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => InventoryItemDetail(
+              itemName: itemName,
+              imagePath: imagePath,
             ),
           ),
         );
       },
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      child: AnimatedScale(
+        scale: 1.0,
+        duration: const Duration(milliseconds: 300),
+        child: Card(
+          elevation: 6,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Hero(
+                  tag: imagePath,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.asset(
+                      imagePath,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(6),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(15),
+                  ),
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF1D2671),
+                      Color(0xFFC33764)
+                    ], // Gradient matching HomePage
+                  ),
+                ),
+                child: Text(
+                  itemName,
+                  style: const TextStyle(
+                    fontSize: 14, // Smaller font size
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+      ),
+    );
+  }
+}
+
+class InventoryItemDetail extends StatelessWidget {
+  final String itemName;
+  final String imagePath;
+
+  const InventoryItemDetail({
+    Key? key,
+    required this.itemName,
+    required this.imagePath,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(itemName),
+        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF1D2671),
+                Color(0xFFC33764)
+              ], // Gradient matching HomePage
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 5,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF1D2671),
+              Color(0xFFC33764)
+            ], // Gradient matching HomePage
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Hero(
+                tag: imagePath,
                 child: Image.asset(
                   imagePath,
                   fit: BoxFit.contain,
+                  height: 200,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
+              const SizedBox(height: 20),
+              Text(
                 itemName,
-                style: TextStyle(
-                  fontSize: 16,
+                style: const TextStyle(
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
-                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                style: ElevatedButton.styleFrom(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  backgroundColor: Colors.purpleAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                child: const Text(
+                  'Close',
+                  style: TextStyle(fontSize: 16),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

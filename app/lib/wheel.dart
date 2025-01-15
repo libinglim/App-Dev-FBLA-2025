@@ -143,7 +143,7 @@ class _WheelPageState extends State<WheelPage> {
             Container(
               decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.deepPurple, Colors.blue],
+                  colors: [Color(0xFF1D2671), Color(0xFFC33764)],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                 ),
@@ -169,17 +169,17 @@ class _WheelPageState extends State<WheelPage> {
                   },
                   child: AnimatedContainer(
                     duration: const Duration(milliseconds: 200),
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: isBackButtonHovered
                           ? Colors.blueAccent
-                          : Colors.white,
+                          : Colors.white.withOpacity(0.3),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black,
+                          color: Colors.black.withOpacity(0.2),
                           blurRadius: 5,
-                          spreadRadius: 1,
+                          spreadRadius: 2,
                         ),
                       ],
                     ),
@@ -188,7 +188,7 @@ class _WheelPageState extends State<WheelPage> {
                       color: isBackButtonHovered
                           ? Colors.white
                           : Colors.blueAccent,
-                      size: 24,
+                      size: 28,
                     ),
                   ),
                 ),
@@ -208,6 +208,12 @@ class _WheelPageState extends State<WheelPage> {
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black,
+                        blurRadius: 8,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -263,7 +269,7 @@ class _WheelPageState extends State<WheelPage> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 40),
                 ElevatedButton(
                   onPressed:
                       Globals.spins > 0 && Globals.availableItems.isNotEmpty
