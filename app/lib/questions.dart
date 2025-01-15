@@ -115,10 +115,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => const HomePage()),
-                    );
+                    Navigator.pop(context);
                   },
                 ),
                 const SizedBox(width: 10),

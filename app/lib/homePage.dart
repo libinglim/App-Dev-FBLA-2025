@@ -2,6 +2,7 @@ import 'package:app/inventoryPage.dart';
 import 'package:app/profilePage.dart';
 import 'package:app/questions.dart';
 import 'package:app/shop.dart';
+import 'package:app/votingPage.dart';
 import 'package:app/wheel.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
@@ -16,7 +17,16 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _controller;
+  late AnimationController _bounceController;
+  late Animation<double> _bounceAnimation;
   late Animation<double> _animation;
+  late double height;
+  late double width;
+
+  int generateRandomNumber() {
+    Random random = Random();
+    return random.nextInt(6) + 3;
+  }
 
   @override
   void initState() {
@@ -165,44 +175,72 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           Positioned(
-            bottom: 30,
-            right: 30,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        WheelPage(), // Replace with your actual WheelPage widget
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(30),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [Colors.yellow, Colors.orange],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.orange.withOpacity(0.6),
-                      blurRadius: 20,
+            bottom: 20,
+            right: -10,
+            child: Column(children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => VotingPage(),
                     ),
-                  ],
-                ),
-                child: const Text(
-                  'Spin!',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.purpleAccent,
+                  ),
+                  padding: const EdgeInsets.all(40),
+                  child: const Text(
+                    'Vote!',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
+              SizedBox(
+                height: height / 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => WheelPage(),
+                    ),
+                  );
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: const RadialGradient(
+                      colors: [Colors.yellow, Colors.orange],
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.orange.withOpacity(0.7),
+                        blurRadius: 30,
+                        spreadRadius: 30,
+                      ),
+                    ],
+                  ),
+                  padding: const EdgeInsets.all(40),
+                  child: const Text(
+                    'Spin!',
+                    style: TextStyle(
+                      fontSize: 50,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ]),
           ),
         ],
       ),
