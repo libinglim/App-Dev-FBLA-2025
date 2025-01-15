@@ -11,31 +11,33 @@ class QuestionsPage extends StatefulWidget {
 }
 
 class _QuestionsPageState extends State<QuestionsPage> {
-  final Random _random = Random();
-  int _currentQuestionIndex = 0;
-  int _correctAnswers = 0;
-  late String _question;
-  late int _correctOption;
-  List<int> _options = [];
+  final Random random = Random();
+
+  int currentQuestionIndex = 0;
+  int correctAnswers = 0;
+  int difficultyLevel = 1;
+  late String question;
+  late int correctOption;
+  late List<int> options;
 
   @override
   void initState() {
     super.initState();
-    _generateQuestion();
+    generateQuestion();
   }
 
-  void _generateQuestion() {
-    int num1 = _random.nextInt(20) + 1;
-    int num2 = _random.nextInt(20) + 1;
-    _correctOption = num1 + num2;
-    _question = '$num1 + $num2 = ?';
-    _options = _generateOptions(_correctOption);
+  void generateQuestion() {
+    int num1 = random.nextInt(20 * difficultyLevel) + 1;
+    int num2 = random.nextInt(20 * difficultyLevel) + 1;
+    correctOption = num1 + num2;
+    question = '$num1 + $num2 = ?';
+    options = generateOptions(correctOption);
   }
 
-  List<int> _generateOptions(int correct) {
+  List<int> generateOptions(int correct) {
     List<int> options = [correct];
     while (options.length < 4) {
-      int option = _random.nextInt(40) + 1;
+      int option = random.nextInt(40 * difficultyLevel) + 1;
       if (!options.contains(option)) {
         options.add(option);
       }
@@ -44,34 +46,37 @@ class _QuestionsPageState extends State<QuestionsPage> {
     return options;
   }
 
-  void _checkAnswer(int selectedOption) {
-    if (selectedOption == _correctOption) {
-      _correctAnswers++;
+  void checkAnswer(int selectedOption) {
+    if (selectedOption == correctOption) {
+      correctAnswers++;
       Globals.coins += 100;
-      if (_correctAnswers % 10 == 0) {
+
+      if (correctAnswers % 5 == 0) {
         Globals.spins++;
-        _showMessage('Congratulations!', 'You earned +1 Spin!');
+        showMessage(
+            'Congratulations!', 'You earned +1 spin and advanced a level!');
+        difficultyLevel++; // Increase difficulty every 5 correct answers
       } else {
-        _showMessage('Correct!', 'You earned 100 coins!');
+        showMessage('Correct!', 'You earned 100 coins!');
       }
     } else {
-      _showMessage('Wrong!', 'The correct answer was $_correctOption.');
+      showMessage('Wrong!', 'The correct answer was $correctOption.');
     }
 
-    if (_currentQuestionIndex < 19) {
+    if (currentQuestionIndex < 19) {
       setState(() {
-        _currentQuestionIndex++;
-        _generateQuestion();
+        currentQuestionIndex++;
+        generateQuestion();
       });
     } else {
-      _showMessage(
+      showMessage(
         'Quiz Completed',
-        'You answered $_correctAnswers out of 20 questions correctly.',
+        'You answered $correctAnswers out of 20 questions correctly.',
       );
     }
   }
 
-  void _showMessage(String title, String content) {
+  void showMessage(String title, String content) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -154,8 +159,15 @@ class _QuestionsPageState extends State<QuestionsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                // Progress Bar
+                LinearProgressIndicator(
+                  value: (currentQuestionIndex + 1) / 20,
+                  backgroundColor: Colors.white,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+                const SizedBox(height: 20),
                 Text(
-                  'Question ${_currentQuestionIndex + 1} of 20',
+                  'Question ${currentQuestionIndex + 1} of 20',
                   style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -163,7 +175,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  _question,
+                  question,
                   style: const TextStyle(
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
@@ -182,23 +194,27 @@ class _QuestionsPageState extends State<QuestionsPage> {
                       mainAxisSpacing: 15,
                       childAspectRatio: 3.5,
                     ),
-                    itemCount: _options.length,
+                    itemCount: options.length,
                     itemBuilder: (context, index) {
-                      return ElevatedButton(
-                        onPressed: () => _checkAnswer(_options[index]),
-                        style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 5),
-                          backgroundColor: Colors.purpleAccent,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                      return AnimatedScale(
+                        scale: 1.0,
+                        duration: const Duration(milliseconds: 300),
+                        child: ElevatedButton(
+                          onPressed: () => checkAnswer(options[index]),
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 5),
+                            backgroundColor: Colors.purpleAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                           ),
-                        ),
-                        child: Text(
-                          '${_options[index]}',
-                          style: const TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                          child: Text(
+                            '${options[index]}',
+                            style: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
                         ),
                       );
                     },
@@ -206,7 +222,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 ),
                 const SizedBox(height: 30),
                 Text(
-                  'Coins: ${Globals.coins} | spins: ${Globals.spins}',
+                  'Coins: ${Globals.coins} | Spins: ${Globals.spins}',
                   style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
