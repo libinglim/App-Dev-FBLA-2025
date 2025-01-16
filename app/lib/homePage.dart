@@ -17,16 +17,7 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late AnimationController _controller;
-  late AnimationController _bounceController;
-  late Animation<double> _bounceAnimation;
   late Animation<double> _animation;
-  late double height;
-  late double width;
-
-  int generateRandomNumber() {
-    Random random = Random();
-    return random.nextInt(6) + 3;
-  }
 
   @override
   void initState() {
@@ -55,13 +46,53 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
-          // Gradient background
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [Color(0xFF1D2671), Color(0xFFC33764)],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
+              ),
+            ),
+          ),
+          Positioned(
+            top: 225,
+            left: 20,
+            child: Container(
+              width: width / 3.5,
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Leaderboard',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  buildLeaderboardEntry(1, 'Lily', 79),
+                  const Divider(color: Colors.white38),
+                  buildLeaderboardEntry(2, 'John', 67),
+                  const Divider(color: Colors.white38),
+                  buildLeaderboardEntry(3, 'Brady', 58),
+                  const Divider(color: Colors.white38),
+                  buildLeaderboardEntry(4, 'Emma', 49),
+                  const Divider(color: Colors.white38),
+                  buildLeaderboardEntry(5, 'Evan', 45),
+                ],
               ),
             ),
           ),
@@ -104,18 +135,12 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   'Build-A-Bot!',
                   style: TextStyle(
                     fontSize: 40,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
-                    shadows: [
-                      Shadow(
-                        color: Colors.black.withOpacity(0.4),
-                        blurRadius: 10,
-                      ),
-                    ],
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -132,17 +157,18 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   },
                 ),
                 const SizedBox(height: 40),
-                _buildMenuButton(
+                buildMenuButton(
                   'Answer Questions',
                   Icons.question_answer,
                   Colors.blueAccent,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => QuestionsPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const QuestionsPage()),
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildMenuButton(
+                buildMenuButton(
                   'Profile',
                   Icons.person,
                   Colors.purpleAccent,
@@ -152,7 +178,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildMenuButton(
+                buildMenuButton(
                   'Inventory',
                   Icons.inventory,
                   Colors.greenAccent,
@@ -162,13 +188,13 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   ),
                 ),
                 const SizedBox(height: 20),
-                _buildMenuButton(
+                buildMenuButton(
                   'Shop',
                   Icons.store,
                   Colors.amberAccent,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ShopPage()),
+                    MaterialPageRoute(builder: (context) => const ShopPage()),
                   ),
                 ),
               ],
@@ -188,7 +214,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   );
                 },
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.purpleAccent,
                   ),
@@ -211,7 +237,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => WheelPage(),
+                      builder: (context) => const WheelPage(),
                     ),
                   );
                 },
@@ -247,7 +273,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildMenuButton(
+  Widget buildMenuButton(
       String text, IconData icon, Color color, VoidCallback onPressed) {
     return ElevatedButton.icon(
       onPressed: onPressed,
@@ -263,6 +289,28 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
           borderRadius: BorderRadius.circular(12),
         ),
       ),
+    );
+  }
+
+  Widget buildLeaderboardEntry(int rank, String name, int score) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          '$rank. $name',
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          '$score wins',
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.amberAccent,
+          ),
+        ),
+      ],
     );
   }
 }
