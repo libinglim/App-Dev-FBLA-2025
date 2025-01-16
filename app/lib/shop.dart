@@ -28,15 +28,7 @@ class ShopPageState extends State<ShopPage> {
     'Neck Decor': [
       Item('Scarf', 'images/Scarf.png', 5000),
       Item('Beard', 'images/Beard.png', 12000),
-      Item('Mustache', 'images/Mustache.png', 6000),
-    ],
-    'Accessories': [
-      Item('Ruler', 'images/Ruler.png', 7000),
-      Item('Calculator', 'images/Calculator.png', 15000),
-      Item('Candy Cane', 'images/CandyCane.png', 6000),
-      Item('Cane', 'images/Cane.png', 10000),
-      Item('Carrot', 'images/Carrot.png', 100),
-      Item('Positive Sign', 'images/PositiveSign.png', 12000),
+      Item('Mustache', 'images/Mustache.png', 100),
     ],
   };
 
@@ -53,43 +45,36 @@ class ShopPageState extends State<ShopPage> {
     'images/OvalRobot.png',
   ];
 
-  // Define position offsets for different robots and categories
   final Map<String, Map<String, Offset>> accessoryPositions = {
     'images/robot.png': {
       'Hats': Offset(232, -65),
       'Head Decor': Offset(235, 100),
       'Neck Decor': Offset(237, 160),
-      'Accessories': Offset(20, 150),
     },
     'images/FemaleRobot.png': {
       'Hats': Offset(240, -55),
       'Head Decor': Offset(235, 80),
       'Neck Decor': Offset(235, 160),
-      'Accessories': Offset(30, 170),
     },
     'images/RadRobot.png': {
       'Hats': Offset(233, -95),
       'Head Decor': Offset(240, 50),
       'Neck Decor': Offset(230, 105),
-      'Accessories': Offset(25, 160),
     },
     'images/SquareRobot.png': {
       'Hats': Offset(240, -47),
       'Head Decor': Offset(237, 80),
       'Neck Decor': Offset(235, 170),
-      'Accessories': Offset(15, 140),
     },
     'images/WinkingRobot.png': {
       'Hats': Offset(237, -95),
       'Head Decor': Offset(236, 60),
       'Neck Decor': Offset(230, 135),
-      'Accessories': Offset(18, 150),
     },
     'images/OvalRobot.png': {
       'Hats': Offset(260, -97),
       'Head Decor': Offset(260, 50),
       'Neck Decor': Offset(250, 118),
-      'Accessories': Offset(28, 155),
     },
   };
 
@@ -171,10 +156,10 @@ class ShopPageState extends State<ShopPage> {
     });
   }
 
-  void _onItemHover(String? imagePath) {
-    setState(() {
-      hoveredItemImage = imagePath;
-    });
+  void _addRobotToMergeList(String robotImage) {
+    if (!Globals.mergedRobots.contains(robotImage)) {
+      Globals.mergedRobots.add(robotImage); // Adds robot image to the list
+    }
   }
 
   Widget _buildCategorySpecificPosition(String category) {
@@ -185,12 +170,7 @@ class ShopPageState extends State<ShopPage> {
       top: position.dy,
       left: position.dx,
       child: Image.asset(
-        hoveredItemImage ??
-            (category == 'Hats'
-                ? 'images/TopHat.png'
-                : category == 'Head Decor'
-                    ? 'images/Scarf.png'
-                    : 'images/Ruler.png'),
+        hoveredItemImage ?? '',
         height: 165,
         width: 165,
       ),
@@ -299,16 +279,45 @@ class ShopPageState extends State<ShopPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Purchase Successful'),
-          content: Text('You have successfully purchased ${item.name}.'),
+          content: Text(
+              'You have successfully purchased ${item.name}. Would you like to equip it?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  hoveredItemImage = item.image; // Equip the item
+                });
+                // Merge the images and add to Globals.mergeRobots
+                _mergeAndSaveRobot(item);
+                Navigator.pop(context);
+              },
+              child: const Text('Equip'),
             ),
           ],
         );
       },
     );
+  }
+
+  void _mergeAndSaveRobot(Item item) {
+    // Merge the robot image with the selected item
+    String mergedRobotImage = _mergeImages(currentRobotImage, item.image);
+
+    // Save the merged robot image into Globals.mergeRobots
+    if (!Globals.mergedRobots.contains(mergedRobotImage)) {
+      Globals.mergedRobots.add(mergedRobotImage);
+    }
+  }
+
+  String _mergeImages(String robotImage, String accessoryImage) {
+    // Logic to merge the robot image with the accessory image
+    // You might need to perform image processing here (like overlaying the images)
+    // For now, we'll simulate it by concatenating the filenames (you can replace this with actual image processing code)
+    return '$robotImage + $accessoryImage'; // Simulating merged image by name
   }
 
   void _showInsufficientFundsDialog(BuildContext context) {
@@ -370,6 +379,12 @@ class ShopPageState extends State<ShopPage> {
         ),
       ),
     );
+  }
+
+  void _onItemHover(String? imagePath) {
+    setState(() {
+      hoveredItemImage = imagePath;
+    });
   }
 }
 

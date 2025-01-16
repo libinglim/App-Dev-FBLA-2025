@@ -48,16 +48,16 @@ class _InventoryPageState extends State<InventoryPage> {
                 padding: const EdgeInsets.all(12.0),
                 child: GridView.builder(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of cards per row
+                    crossAxisCount: 3, // Number of cards per row
                     mainAxisSpacing: 12,
                     crossAxisSpacing: 12,
                     childAspectRatio: 0.6, // Adjusted aspect ratio
                   ),
-                  itemCount: Globals.inventory.length,
+                  itemCount: Globals.mergedRobots.length,
                   itemBuilder: (context, index) {
                     return InventoryItemCard(
                       itemName: 'Item ${index + 1}',
-                      imagePath: Globals.inventory[index],
+                      imagePath: Globals.mergedRobots[index],
                     );
                   },
                 ),

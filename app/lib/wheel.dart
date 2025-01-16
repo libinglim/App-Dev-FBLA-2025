@@ -31,7 +31,7 @@ class _WheelPageState extends State<WheelPage> {
         'images/SantaHat.png',
         'images/Monocle.png',
         'images/RadGlasses.png',
-        'images/Ruler.png',
+        'images/Beanie.png',
         'images/TopHat.png',
       ];
     }
