@@ -1,6 +1,7 @@
 import 'package:app/inventoryPage.dart';
 import 'package:app/profilePage.dart';
 import 'package:app/questions.dart';
+import 'package:app/robotCostumes.dart';
 import 'package:app/shop.dart';
 import 'package:app/votingPage.dart';
 import 'package:app/wheel.dart';
@@ -143,20 +144,19 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(height: 20),
                 AnimatedBuilder(
                   animation: _animation,
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(0, -_animation.value),
-                      child: Image.asset(
+                      child: RobotCostumes.drawRobot(RobotCostumes(height/4, 'images/SquareRobot.png', 'images/SantaHat.png', 'images/Glasses.png', 'images/Mustache.png'))/*Image.asset(
                         'images/OvalRobot.png',
                         height: height / 4,
-                      ),
+                      ),*/
                     );
                   },
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 60),
                 buildMenuButton(
                   'Answer Questions',
                   Icons.question_answer,

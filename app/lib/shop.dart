@@ -1,3 +1,4 @@
+import 'package:app/robotCostumes.dart';
 import 'package:flutter/material.dart';
 import 'globals.dart';
 
@@ -85,17 +86,17 @@ class ShopPageState extends State<ShopPage> {
         title: const Text('Shop', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Row(
+      body: Center(child: Row(
         children: [
           Expanded(
-            child: Stack(
+            child: RobotCostumes.drawRobot(RobotCostumes((MediaQuery.of(context).size.height)/2, currentRobotImage, selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '', selectedCategory == 'Head Decor' ? (hoveredItemImage ?? '') : '', selectedCategory == 'Neck Decor' ? (hoveredItemImage ?? '') : '')) /*Stack(
               alignment: Alignment.center,
               children: [
                 Image.asset(currentRobotImage),
                 if (hoveredItemImage != null)
                   _buildCategorySpecificPosition(selectedCategory),
               ],
-            ),
+            ),*/
           ),
           Expanded(
             child: Column(
@@ -144,6 +145,7 @@ class ShopPageState extends State<ShopPage> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
