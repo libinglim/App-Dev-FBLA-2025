@@ -110,7 +110,6 @@ class _WheelPageState extends State<WheelPage> {
                         setState(() {
                           spinning = false;
                         });
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,

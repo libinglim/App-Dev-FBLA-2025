@@ -16,5 +16,7 @@ class Globals {
     'images/OvalRobot.png',
   ];
   static List<String> accessories = [];
-  static RobotCostumes selectedRobot = RobotCostumes('images/OvalRobot.png', '', '', '');
+  static RobotCostumes selectedRobot =
+      RobotCostumes('images/OvalRobot.png', '', '', '');
+  static Map<String, String> robotNames = {};
 }

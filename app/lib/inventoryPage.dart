@@ -169,11 +169,29 @@ class InventoryItemCard extends StatefulWidget {
 }
 
 class _InventoryItemCard extends State<InventoryItemCard> {
+  bool isEditing = false;
+  late TextEditingController nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    final initialName = Globals.robotNames[widget.imagePath] ?? widget.itemName;
+    nameController = TextEditingController(text: initialName);
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    super.dispose();
+  }
+
+  void _saveName(String name) {
+    Globals.robotNames[widget.imagePath] = name;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async {
-      },
       child: AnimatedScale(
         scale: 1.0,
         duration: const Duration(milliseconds: 300),
@@ -186,11 +204,15 @@ class _InventoryItemCard extends State<InventoryItemCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: RobotCostumes.drawRobot(RobotCostumes(
+                child: RobotCostumes.drawRobot(
+                  RobotCostumes(
                     widget.imagePath,
                     Globals.selectedRobot.hatImage,
                     Globals.selectedRobot.headDecorImage,
-                    Globals.selectedRobot.neckDecorImage), 400),
+                    Globals.selectedRobot.neckDecorImage,
+                  ),
+                  400,
+                ),
               ),
               Container(
                 padding: const EdgeInsets.all(6),
@@ -205,14 +227,47 @@ class _InventoryItemCard extends State<InventoryItemCard> {
                     ], // Gradient matching HomePage
                   ),
                 ),
-                child: Text(
-                  widget.itemName,
-                  style: const TextStyle(
-                    fontSize: 14, // Smaller font size
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                  textAlign: TextAlign.center,
+                child: SizedBox(
+                  height: 40, // Set the fixed height for the text box
+                  child: isEditing
+                      ? TextField(
+                          controller: nameController,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                          onSubmitted: (newValue) {
+                            setState(() {
+                              isEditing = false;
+                              _saveName(newValue); // Save the name to Globals
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter name',
+                            hintStyle: TextStyle(color: Colors.white38),
+                          ),
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              isEditing = true;
+                            });
+                          },
+                          child: Center(
+                            child: Text(
+                              nameController.text,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -337,7 +392,7 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Item ${index + 1}',
+                                  'Robot ${index + 1}',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
