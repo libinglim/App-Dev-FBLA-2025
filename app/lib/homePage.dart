@@ -1,13 +1,13 @@
-import 'package:app/inventoryPage.dart';
-import 'package:app/profilePage.dart';
-import 'package:app/questions.dart';
-import 'package:app/robotCostumes.dart';
-import 'package:app/shop.dart';
-import 'package:app/votingPage.dart';
-import 'package:app/wheel.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:url_launcher/url_launcher.dart';
 import 'globals.dart';
+import 'robotCostumes.dart';
+import 'inventoryPage.dart';
+import 'profilePage.dart';
+import 'questions.dart';
+import 'shop.dart';
+import 'votingPage.dart';
+import 'wheel.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -39,6 +39,28 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     super.dispose();
   }
 
+  // Function to open Instagram
+  void _openInstagram() async {
+    const instagramUrl = 'https://www.instagram.com/libinglim/';
+    final uri = Uri.parse(instagramUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $instagramUrl';
+    }
+  }
+
+  // Function to open Facebook
+  void _openFacebook() async {
+    const facebookUrl = 'https://www.facebook.com/libinglim/';
+    final uri = Uri.parse(facebookUrl);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $facebookUrl';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -47,6 +69,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: [
+          // Background gradient
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -54,6 +77,25 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
+            ),
+          ),
+          // Social Media Icons in the Top-Right Corner
+          Positioned(
+            top: 20,
+            right: 20,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.camera_alt,
+                      color: Colors.purpleAccent, size: 28),
+                  onPressed: _openInstagram,
+                ),
+                IconButton(
+                  icon: const Icon(Icons.facebook,
+                      color: Colors.blueAccent, size: 28),
+                  onPressed: _openFacebook,
+                ),
+              ],
             ),
           ),
           Positioned(
@@ -149,7 +191,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(0, -_animation.value),
-                      child: RobotCostumes.drawRobot(Globals.selectedRobot, 200),
+                      child:
+                          RobotCostumes.drawRobot(Globals.selectedRobot, 200),
                     );
                   },
                 ),
@@ -182,9 +225,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     context,
                     MaterialPageRoute(builder: (context) => InventoryPage()),
                   );
-                  setState(() {
-
-                  });
+                  setState(() {});
                 }),
                 const SizedBox(height: 20),
                 buildMenuButton(
