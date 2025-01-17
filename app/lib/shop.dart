@@ -1,4 +1,7 @@
+import 'package:app/robotCostumes.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart';
+import 'homePage.dart';
 
 int coins = 100000;
 
@@ -70,12 +73,9 @@ class ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Shop', style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.deepPurple,
-        elevation: 4,
-      ),
-      body: Container(
+      body: Stack(
+          children: [
+        Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [Colors.deepPurple, Colors.black],
@@ -83,21 +83,53 @@ class ShopPageState extends State<ShopPage> {
             end: Alignment.bottomRight,
           ),
         ),
-        child: Column(
+          child: CustomPaint(
+            size: Size(MediaQuery.of(context).size.width,
+                MediaQuery.of(context).size.height),
+            painter: StarryNightPainter(),
+          ),
+    ),
+         Column(
           children: [
+            SizedBox(height: 20),
+            Text('Shop', style: TextStyle(color: Colors.white, fontSize: 40, fontWeight: FontWeight.bold),),
+            SizedBox(height: 50),
             _buildCoinDisplay(),
             _buildTopButtonsRow(),
             Expanded(
               child: Row(
                 children: [
-                  _buildRobotPreview(),
-                  _buildShopItems(),
+                  Expanded(
+                      child: RobotCostumes.drawRobot(
+                        RobotCostumes(
+                            currentRobotImage,
+                            selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '',
+                            selectedCategory == 'Head Decor'
+                                ? (hoveredItemImage ?? '')
+                                : '',
+                            selectedCategory == 'Neck Decor'
+                                ? (hoveredItemImage ?? '')
+                                : ''),
+                        (MediaQuery.of(context).size.height) / 2,
+                      )
+                  ),
+                      _buildShopItems(),
                 ],
               ),
             ),
           ],
         ),
-      ),
+            Positioned(
+              top: 20,
+              left: 20,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
+    ]),
     );
   }
 

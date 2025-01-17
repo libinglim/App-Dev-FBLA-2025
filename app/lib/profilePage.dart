@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:app/robotCostumes.dart';
 import 'package:app/globals.dart';
 
+import 'homePage.dart';
+
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -34,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         backgroundColor:
             Colors.transparent, // Make AppBar background transparent
         elevation: 0, // Remove the AppBar shadow
@@ -56,8 +58,12 @@ class _ProfilePageState extends State<ProfilePage>
               end: Alignment.bottomRight,
             ),
           ),
+          child: CustomPaint(
+            size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+            painter: StarryNightPainter(),
+          ),
         ),
-      ),
+      ),*/
       body: Stack(
         children: [
           // Matching gradient
@@ -71,6 +77,10 @@ class _ProfilePageState extends State<ProfilePage>
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
+            ),
+            child: CustomPaint(
+              size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+              painter: StarryNightPainter(),
             ),
           ),
           SingleChildScrollView(
@@ -146,7 +156,7 @@ class _ProfilePageState extends State<ProfilePage>
                   ],
                 ),
                 SizedBox(
-                  height: 300, // Adjusted to give space for the grid view
+                  height: 400, // Adjusted to give space for the grid view
                   child: TabBarView(
                     controller: tabController,
                     children: [
@@ -214,6 +224,16 @@ class _ProfilePageState extends State<ProfilePage>
                   ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            top: 20,
+            left: 20,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () {
+                Navigator.pop(context);
+              },
             ),
           ),
         ],

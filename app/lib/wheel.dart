@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:async';
 import 'package:confetti/confetti.dart';
 import 'globals.dart';
+import 'homePage.dart';
 
 class WheelPage extends StatefulWidget {
   const WheelPage({super.key});
@@ -152,6 +153,9 @@ class _WheelPageState extends State<WheelPage> {
                   end: Alignment.bottomCenter,
                 ),
               ),
+              child: CustomPaint(
+                size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+                painter: StarryNightPainter()),
             ),
             Positioned(
               top: 40,

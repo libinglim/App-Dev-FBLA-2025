@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'globals.dart';
 import 'package:app/robotCostumes.dart';
 
+import 'homePage.dart';
+
 class InventoryPage extends StatefulWidget {
   const InventoryPage({super.key});
 
@@ -350,10 +352,13 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
             ], // Gradient matching HomePage
           ),
         ),
-        child: Row(
+        child: CustomPaint(
+      size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+    painter: StarryNightPainter(),
+    child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const SizedBox(),
+            SizedBox(height: 50),
             Expanded(
               child: RobotCostumes.drawRobot(robot, 400),
             ),
@@ -413,6 +418,7 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
             ),
           ],
         ),
+      ),
       ),
       floatingActionButton: selectedAccessory.isNotEmpty
           ? FloatingActionButton(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:math';
 import 'globals.dart';
 import 'robotCostumes.dart';
 import 'inventoryPage.dart';
@@ -77,6 +79,11 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
+            ),
+            child: CustomPaint(
+              size: Size(MediaQuery.of(context).size.width,
+                  MediaQuery.of(context).size.height),
+              painter: StarryNightPainter(),
             ),
           ),
           // Social Media Icons in the Top-Right Corner
@@ -352,5 +359,33 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
         ),
       ],
     );
+  }
+}
+
+class StarryNightPainter extends CustomPainter {
+  List<Offset> starPositions = Globals.starPositions;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Fill the background with a dark blue color (night sky)
+    Paint backgroundPaint = Paint()..color = Colors.black;
+    canvas.drawRect(
+        Rect.fromLTWH(0, 0, size.width, size.height), backgroundPaint);
+
+    Paint starPaint = Paint()..color = Colors.white;
+
+    // Draw each star at its fixed position
+    for (Offset position in starPositions) {
+      double x = position.dx * size.width; // Scale normalized x position
+      double y = position.dy * size.height; // Scale normalized y position
+      double starSize = 3; // Random size between 1 and 3
+
+      canvas.drawCircle(Offset(x, y), starSize, starPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false; // No repaint needed since stars are static
   }
 }

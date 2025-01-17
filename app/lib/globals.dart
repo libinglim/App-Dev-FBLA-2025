@@ -1,3 +1,5 @@
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:app/robotCostumes.dart';
 
 class Globals {
@@ -17,4 +19,6 @@ class Globals {
   static RobotCostumes selectedRobot =
       RobotCostumes('images/OvalRobot.png', '', '', '');
   static Map<String, String> robotNames = {};
+  static final List<Offset> starPositions = List.generate(
+      150, (index) => Offset(Random().nextDouble(), Random().nextDouble()));
 }

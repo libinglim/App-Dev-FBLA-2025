@@ -108,6 +108,10 @@ class _QuestionsPageState extends State<QuestionsPage> {
                 end: Alignment.bottomCenter,
               ),
             ),
+            child: CustomPaint(
+              size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+              painter: StarryNightPainter(),
+            ),
           ),
           // Back Button
           Positioned(
@@ -116,10 +120,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
             child: IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
               onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                );
+                Navigator.pop(context);
               },
             ),
           ),
