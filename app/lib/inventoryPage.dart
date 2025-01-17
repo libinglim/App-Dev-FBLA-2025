@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'globals.dart';
+import 'package:app/robotCostumes.dart';
 
 class InventoryPage extends StatefulWidget {
   @override
@@ -7,6 +8,23 @@ class InventoryPage extends StatefulWidget {
 }
 
 class _InventoryPageState extends State<InventoryPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void _equipAccessory(String selectedAccessory) {
+    if (selectedAccessory.isNotEmpty) {
+      if (selectedAccessory.contains('Hat')) {
+        Globals.equippedHat = selectedAccessory;
+      } else if (selectedAccessory.contains('Head')) {
+        Globals.equippedHead = selectedAccessory;
+      } else if (selectedAccessory.contains('Neck')) {
+        Globals.equippedNeck = selectedAccessory;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +59,9 @@ class _InventoryPageState extends State<InventoryPage> {
             ], // Gradient matching HomePage
           ),
         ),
-        child: Column(
+        child: Row(
           children: [
+            // Main content area
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -53,13 +72,78 @@ class _InventoryPageState extends State<InventoryPage> {
                     crossAxisSpacing: 12,
                     childAspectRatio: 0.6, // Adjusted aspect ratio
                   ),
-                  itemCount: Globals.mergedRobots.length,
+                  itemCount: Globals.robots.length,
                   itemBuilder: (context, index) {
                     return InventoryItemCard(
                       itemName: 'Item ${index + 1}',
-                      imagePath: Globals.mergedRobots[index],
+                      imagePath: Globals.robots[index],
                     );
                   },
+                ),
+              ),
+            ),
+            // Scrollable image buttons on the right
+            Container(
+              width: 100, // Fixed width for the scrollable column
+              decoration: BoxDecoration(
+                color: Colors.black
+                    .withOpacity(0.3), // Semi-transparent background
+                border: Border(
+                  left: BorderSide(color: Colors.white.withOpacity(0.5)),
+                ),
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children:
+                      List.generate(Globals.accessories.length + 1, (index) {
+                    return index == Globals.accessories.length
+                        ? ElevatedButton(
+                            onPressed: () {
+                              Globals.equippedHat = '';
+                              Globals.equippedHead = '';
+                              Globals.equippedNeck = '';
+                              setState(() {});
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red),
+                            child: Icon(Icons.delete,
+                                size: 24, color: Colors.white),
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _equipAccessory(Globals.accessories[index]);
+                                });
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8.0),
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Image.asset(
+                                        Globals.accessories[index],
+                                        fit: BoxFit.cover,
+                                        height: 60, // Adjust as needed
+                                        width: 60, // Adjust as needed
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Item ${index + 1}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                  }),
                 ),
               ),
             ),
@@ -70,7 +154,7 @@ class _InventoryPageState extends State<InventoryPage> {
   }
 }
 
-class InventoryItemCard extends StatelessWidget {
+class InventoryItemCard extends StatefulWidget {
   final String itemName;
   final String imagePath;
 
@@ -81,18 +165,24 @@ class InventoryItemCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<InventoryItemCard> createState() => _InventoryItemCard();
+}
+
+class _InventoryItemCard extends State<InventoryItemCard> {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => InventoryItemDetail(
-              itemName: itemName,
-              imagePath: imagePath,
+              itemName: widget.itemName,
+              imagePath: widget.imagePath,
             ),
           ),
         );
+        setState(() {});
       },
       child: AnimatedScale(
         scale: 1.0,
@@ -106,16 +196,12 @@ class InventoryItemCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                child: Hero(
-                  tag: imagePath,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      imagePath,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
+                child: RobotCostumes.drawRobot(RobotCostumes(
+                    400,
+                    widget.imagePath,
+                    Globals.equippedHat,
+                    Globals.equippedHead,
+                    Globals.equippedNeck)),
               ),
               Container(
                 padding: const EdgeInsets.all(6),
@@ -131,7 +217,7 @@ class InventoryItemCard extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  itemName,
+                  widget.itemName,
                   style: const TextStyle(
                     fontSize: 14, // Smaller font size
                     fontWeight: FontWeight.bold,
@@ -148,7 +234,7 @@ class InventoryItemCard extends StatelessWidget {
   }
 }
 
-class InventoryItemDetail extends StatelessWidget {
+class InventoryItemDetail extends StatefulWidget {
   final String itemName;
   final String imagePath;
 
@@ -159,10 +245,39 @@ class InventoryItemDetail extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<InventoryItemDetail> createState() => _InventoryItemDetailState();
+}
+
+class _InventoryItemDetailState extends State<InventoryItemDetail> {
+  String selectedAccessory = ''; // Store selected accessory
+  late RobotCostumes robot;
+
+  @override
+  void initState() {
+    super.initState();
+    robot = RobotCostumes(400, widget.imagePath, '', '', '');
+  }
+
+  void _equipAccessory() {
+    if (selectedAccessory.isNotEmpty) {
+      if (selectedAccessory.contains('Hat')) {
+        robot.hatImage = selectedAccessory;
+        Globals.equippedHat = selectedAccessory;
+      } else if (selectedAccessory.contains('Head')) {
+        robot.headDecorImage = selectedAccessory;
+        Globals.equippedHead = selectedAccessory;
+      } else if (selectedAccessory.contains('Neck')) {
+        robot.neckDecorImage = selectedAccessory;
+        Globals.equippedNeck = selectedAccessory;
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(itemName),
+        title: Text(widget.itemName),
         centerTitle: true,
         flexibleSpace: Container(
           decoration: const BoxDecoration(
@@ -189,47 +304,79 @@ class InventoryItemDetail extends StatelessWidget {
             ], // Gradient matching HomePage
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Hero(
-                tag: imagePath,
-                child: Image.asset(
-                  imagePath,
-                  fit: BoxFit.contain,
-                  height: 200,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(),
+            Expanded(
+              child: RobotCostumes.drawRobot(robot),
+            ),
+            // Main content area (Robot preview)
+
+            // Scrollable image buttons on the right
+            Container(
+              width: 100, // Fixed width for the scrollable column
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border(
+                  left: BorderSide(color: Colors.white.withOpacity(0.5)),
                 ),
               ),
-              const SizedBox(height: 20),
-              Text(
-                itemName,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: List.generate(Globals.accessories.length, (index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedAccessory = Globals
+                                .accessories[index]; // Select the accessory
+                            _equipAccessory();
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8.0),
+                          child: Container(
+                            child: Column(
+                              children: [
+                                Image.asset(
+                                  Globals.accessories[index],
+                                  fit: BoxFit.cover,
+                                  height: 60, // Adjust as needed
+                                  width: 60, // Adjust as needed
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Item ${index + 1}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(),
-                style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  backgroundColor: Colors.purpleAccent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                child: const Text(
-                  'Close',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
+      floatingActionButton: selectedAccessory.isNotEmpty
+          ? FloatingActionButton(
+              onPressed: () {
+                _equipAccessory();
+              },
+              child: const Icon(Icons.check),
+              backgroundColor: Colors.green,
+            )
+          : null,
     );
   }
 }

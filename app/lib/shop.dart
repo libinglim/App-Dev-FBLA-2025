@@ -16,20 +16,20 @@ class ShopPageState extends State<ShopPage> {
   final Map<String, List<Item>> categories = {
     'Hats': [
       Item('Top Hat', 'images/TopHat.png', 12000),
-      Item('Beanie', 'images/Beanie.png', 8000),
+      Item('Beanie', 'images/BeanieHat.png', 8000),
       Item('Bucket Hat', 'images/BucketHat.png', 10000),
       Item('Cowboy Hat', 'images/CowboyHat.png', 15000),
       Item('Santa Hat', 'images/SantaHat.png', 18000),
     ],
     'Head Decor': [
-      Item('Glasses', 'images/Glasses.png', 8000),
-      Item('Monocle', 'images/Monocle.png', 11000),
-      Item('Rad Glasses', 'images/RadGlasses.png', 9000),
+      Item('Glasses', 'images/GlassesHead.png', 8000),
+      Item('Monocle', 'images/MonocleHead.png', 11000),
+      Item('Rad Glasses', 'images/RadGlassesHead.png', 9000),
     ],
     'Neck Decor': [
-      Item('Scarf', 'images/Scarf.png', 5000),
-      Item('Beard', 'images/Beard.png', 12000),
-      Item('Mustache', 'images/Mustache.png', 100),
+      Item('Scarf', 'images/ScarfNeck.png', 5000),
+      Item('Beard', 'images/BeardNeck.png', 12000),
+      Item('Mustache', 'images/MustacheNeck.png', 100),
     ],
   };
 
@@ -86,10 +86,20 @@ class ShopPageState extends State<ShopPage> {
         title: const Text('Shop', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Center(child: Row(
-        children: [
-          Expanded(
-            child: RobotCostumes.drawRobot(RobotCostumes((MediaQuery.of(context).size.height)/2, currentRobotImage, selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '', selectedCategory == 'Head Decor' ? (hoveredItemImage ?? '') : '', selectedCategory == 'Neck Decor' ? (hoveredItemImage ?? '') : '')) /*Stack(
+      body: Center(
+        child: Row(
+          children: [
+            Expanded(
+                child: RobotCostumes.drawRobot(RobotCostumes(
+                    (MediaQuery.of(context).size.height) / 2,
+                    currentRobotImage,
+                    selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '',
+                    selectedCategory == 'Head Decor'
+                        ? (hoveredItemImage ?? '')
+                        : '',
+                    selectedCategory == 'Neck Decor'
+                        ? (hoveredItemImage ?? '')
+                        : '')) /*Stack(
               alignment: Alignment.center,
               children: [
                 Image.asset(currentRobotImage),
@@ -97,55 +107,55 @@ class ShopPageState extends State<ShopPage> {
                   _buildCategorySpecificPosition(selectedCategory),
               ],
             ),*/
-          ),
-          Expanded(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      onPressed: _switchRobot,
-                      child: const Text('Switch Robot'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.purpleAccent,
-                      ),
-                    ),
-                    ...categories.keys.map(_buildSegmentButton).toList(),
-                  ],
                 ),
-                Expanded(
-                  child: Stack(
+            Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          gradient: LinearGradient(
-                            colors: [Colors.deepPurple, Colors.blue],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
+                      ElevatedButton(
+                        onPressed: _switchRobot,
+                        child: const Text('Switch Robot'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purpleAccent,
                         ),
                       ),
-                      ListView.builder(
-                        itemCount: categories[selectedCategory]?.length ?? 0,
-                        itemBuilder: (context, index) {
-                          final item = categories[selectedCategory]![index];
-                          return _buildItemCard(item);
-                        },
-                      ),
-                      Positioned(
-                        top: 20,
-                        left: 20,
-                        child: _buildCoinDisplay(),
-                      ),
+                      ...categories.keys.map(_buildSegmentButton).toList(),
                     ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Colors.deepPurple, Colors.blue],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                          ),
+                        ),
+                        ListView.builder(
+                          itemCount: categories[selectedCategory]?.length ?? 0,
+                          itemBuilder: (context, index) {
+                            final item = categories[selectedCategory]![index];
+                            return _buildItemCard(item);
+                          },
+                        ),
+                        Positioned(
+                          top: 20,
+                          left: 20,
+                          child: _buildCoinDisplay(),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
       ),
     );
   }
@@ -281,23 +291,22 @@ class ShopPageState extends State<ShopPage> {
       builder: (context) {
         return AlertDialog(
           title: const Text('Purchase Successful'),
-          content: Text(
-              'You have successfully purchased ${item.name}. Would you like to equip it?'),
+          content: Text('You have successfully purchased ${item.name}.'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('No'),
-            ),
-            TextButton(
               onPressed: () {
+                // Automatically add the purchased item to accessories
                 setState(() {
-                  hoveredItemImage = item.image; // Equip the item
+                  Globals.accessories.add(item.image);
                 });
-                // Merge the images and add to Globals.mergeRobots
+
+                // Merge the robot image with the new accessory (if needed)
                 _mergeAndSaveRobot(item);
+
+                // Close the dialog
                 Navigator.pop(context);
               },
-              child: const Text('Equip'),
+              child: const Text('OK'),
             ),
           ],
         );

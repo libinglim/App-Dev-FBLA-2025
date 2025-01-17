@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import 'package:app/robotCostumes.dart';
+
 class Globals {
   static int coins = 100000;
   static int spins = 0;
@@ -16,4 +18,10 @@ class Globals {
   ];
   static List<String> mergedRobots =
       []; // New list to store merged robot images
+  static List<String> accessories = [];
+  static String equippedHat = '';
+  static String equippedHead = '';
+  static String equippedNeck = '';
+  static RobotCostumes selectedRobot =
+      RobotCostumes(250, 'images/OvalRobot.png', '', '', '');
 }

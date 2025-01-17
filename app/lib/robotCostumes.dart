@@ -11,37 +11,37 @@ class RobotCostumes {
       this.headDecorImage, this.neckDecorImage);
 
   static Widget drawRobot(RobotCostumes robot) {
-    Offset hatOffset = Offset(0,0);
-    Offset headOffset = Offset(0,0);
-    Offset neckOffset = Offset(0,0);
+    Offset hatOffset = Offset(0, 0);
+    Offset headOffset = Offset(0, 0);
+    Offset neckOffset = Offset(0, 0);
     double hatSize = 0.25;
     double headSize = 0.33;
     double neckSize = 0.4;
 
     if (robot.robotImage == 'images/OvalRobot.png') {
-      hatOffset = Offset(robot.robotSize * 0.04,0);
+      hatOffset = Offset(robot.robotSize * 0.04, 0);
       headOffset = Offset(robot.robotSize * 0.04, robot.robotSize * 0.27);
       neckOffset = Offset(robot.robotSize * 0.04, robot.robotSize * 0.4);
-    } else if (robot.robotImage == 'images/robot.png'){
-      hatOffset = Offset(0,0);
+    } else if (robot.robotImage == 'images/robot.png') {
+      hatOffset = Offset(0, 0);
       headSize = 0.5;
       headOffset = Offset(0, robot.robotSize * 0.33);
       neckOffset = Offset(0, robot.robotSize * 0.5);
-    } else if (robot.robotImage == 'images/FemaleRobot.png'){
-      hatOffset = Offset(0,0);
+    } else if (robot.robotImage == 'images/FemaleRobot.png') {
+      hatOffset = Offset(0, 0);
       headOffset = Offset(0, robot.robotSize * 0.33);
       neckOffset = Offset(0, robot.robotSize * 0.45);
-    } else if (robot.robotImage == 'images/RadRobot.png'){
-      hatOffset = Offset(-(robot.robotSize * 0.02),0);
+    } else if (robot.robotImage == 'images/RadRobot.png') {
+      hatOffset = Offset(-(robot.robotSize * 0.02), 0);
       headOffset = Offset(-(robot.robotSize * 0.01), robot.robotSize * 0.27);
       neckOffset = Offset(-(robot.robotSize * 0.02), robot.robotSize * 0.40);
-    } else if (robot.robotImage == 'images/WinkingRobot.png'){
+    } else if (robot.robotImage == 'images/WinkingRobot.png') {
       headSize = 0.5;
-      hatOffset = Offset(0,0);
+      hatOffset = Offset(0, 0);
       headOffset = Offset(0, robot.robotSize * 0.25);
       neckOffset = Offset(0, robot.robotSize * 0.40);
-    } else if (robot.robotImage == 'images/SquareRobot.png'){
-      hatOffset = Offset(0,0);
+    } else if (robot.robotImage == 'images/SquareRobot.png') {
+      hatOffset = Offset(0, 0);
       headOffset = Offset(0, robot.robotSize * 0.34);
       neckOffset = Offset(0, robot.robotSize * 0.47);
     }
@@ -63,17 +63,17 @@ class RobotCostumes {
         if (robot.hatImage != '')
           Align(
             alignment: Alignment.topCenter,
-              child: Transform.translate(
-                offset: hatOffset,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  robot.hatImage,
-                  height: robot.robotSize * hatSize,
-                  width: robot.robotSize * hatSize,
-                  fit: BoxFit.cover,
-                )),
-              ),
+            child: Transform.translate(
+              offset: hatOffset,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    robot.hatImage,
+                    height: robot.robotSize * hatSize,
+                    width: robot.robotSize * hatSize,
+                    fit: BoxFit.cover,
+                  )),
+            ),
           ),
         if (robot.headDecorImage != '')
           Align(

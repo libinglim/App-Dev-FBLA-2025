@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:app/robotCostumes.dart';
+import 'package:app/globals.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -10,17 +12,6 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage>
     with SingleTickerProviderStateMixin {
   late TabController tabController;
-
-  final List<String> robotInventory = [
-    'images/OvalRobot.png',
-    'images/robot.png',
-    'images/FemaleRobot.png',
-    'images/RadRobot.png',
-    'images/SquareRobot.png',
-    'images/WinkingRobot.png',
-  ];
-
-  String selectedRobot = 'images/OvalRobot.png';
 
   @override
   void initState() {
@@ -34,9 +25,9 @@ class _ProfilePageState extends State<ProfilePage>
     super.dispose();
   }
 
-  void selectRobot(String robot) {
+  void selectRobot(RobotCostumes robot) {
     setState(() {
-      selectedRobot = robot;
+      Globals.selectedRobot = robot;
     });
   }
 
@@ -119,11 +110,11 @@ class _ProfilePageState extends State<ProfilePage>
                             ),
                           ),
                           ClipOval(
-                            child: Image.asset(
-                              selectedRobot,
-                              width: 160,
-                              height: 160,
-                              fit: BoxFit.cover,
+                            child: SizedBox(
+                              child: RobotCostumes.drawRobot(
+                                  Globals.selectedRobot),
+                              height: 180,
+                              width: 150,
                             ),
                           ),
                         ],
@@ -161,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage>
                     children: [
                       GridView.builder(
                         padding: const EdgeInsets.all(16.0),
-                        itemCount: robotInventory.length,
+                        itemCount: Globals.robots.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
@@ -169,8 +160,13 @@ class _ProfilePageState extends State<ProfilePage>
                           mainAxisSpacing: 8,
                         ),
                         itemBuilder: (context, index) {
-                          String robot = robotInventory[index];
-                          bool isSelected = robot == selectedRobot;
+                          RobotCostumes robot = RobotCostumes(
+                              250,
+                              Globals.robots[index],
+                              Globals.equippedHat,
+                              Globals.equippedHead,
+                              Globals.equippedNeck);
+                          bool isSelected = robot == Globals.selectedRobot;
                           return GestureDetector(
                             onTap: () => selectRobot(robot),
                             child: Container(
@@ -198,7 +194,9 @@ class _ProfilePageState extends State<ProfilePage>
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Image.asset(robot, height: 100, width: 100),
+                                  Expanded(
+                                    child: RobotCostumes.drawRobot(robot),
+                                  ),
                                   const SizedBox(height: 8),
                                   Text(
                                     isSelected ? 'Selected' : 'Select',

@@ -149,10 +149,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(0, -_animation.value),
-                      child: RobotCostumes.drawRobot(RobotCostumes(height/4, 'images/SquareRobot.png', 'images/SantaHat.png', 'images/Glasses.png', 'images/Mustache.png'))/*Image.asset(
-                        'images/OvalRobot.png',
-                        height: height / 4,
-                      ),*/
+                      child: RobotCostumes.drawRobot(Globals.selectedRobot),
                     );
                   },
                 ),

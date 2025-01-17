@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:app/robotCostumes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class VotingPage extends StatefulWidget {
   @override
@@ -11,13 +13,62 @@ class VotingPage extends StatefulWidget {
 class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
   // Sample robot data (replace with real images/URLs if needed)
   final List<Map<String, dynamic>> robots = [
-    {'name': 'Brady', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'John', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'Evan', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'Lily', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'Mina', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'Emma', 'image': 'images/robot.png', 'rating': 0},
-    {'name': 'Billy', 'image': 'images/robot.png', 'rating': 0},
+    {
+      'name': 'Brady',
+      'image': 'images/OvalRobot.png',
+      'rating': 0,
+      'hat': 'images/TopHat.png',
+      'head': 'images/MonocleHead.png',
+      'neck': 'images/MustacheNeck.png'
+    },
+    {
+      'name': 'John',
+      'image': 'images/robot.png',
+      'rating': 0,
+      'hat': 'images/BeanieHat.png',
+      'head': '',
+      'neck': ''
+    },
+    {
+      'name': 'Evan',
+      'image': 'images/RadRobot.png',
+      'rating': 0,
+      'hat': '',
+      'head': 'images/RadGlassesHead.png',
+      'neck': ''
+    },
+    {
+      'name': 'Lily',
+      'image': 'images/FemaleRobot.png',
+      'rating': 0,
+      'hat': '',
+      'head': 'images/GlassesHead.png',
+      'neck': 'images/ScarfNeck.png',
+    },
+    {
+      'name': 'Mina',
+      'image': 'images/WinkingRobot.png',
+      'rating': 0,
+      'hat': 'images/CowboyHat.png',
+      'head': '',
+      'neck': 'images/MustacheNeck.png',
+    },
+    {
+      'name': 'Emma',
+      'image': 'images/OvalRobot.png',
+      'rating': 0,
+      'hat': 'images/SantaHat.png',
+      'head': '',
+      'neck': 'images/BeardNeck.png',
+    },
+    {
+      'name': 'Billy',
+      'image': 'images/SquareRobot.png',
+      'rating': 0,
+      'hat': 'images/BucketHat.png',
+      'head': 'images/MonocleHead.png',
+      'neck': ''
+    },
   ];
   late PageController _pageController;
   int _currentPage = 0;
@@ -48,9 +99,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
       } else {
         _timer.cancel();
         votingEnded = true;
-        setState(() {
-
-        });
+        setState(() {});
       }
     });
   }
@@ -66,6 +115,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
       robots[index]['rating'] = rating;
     });
   }
+
   void goToPage(int index) {
     if (index >= 0 && index < robots.length) {
       setState(() {
@@ -101,7 +151,8 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                 left: 10,
                 top: MediaQuery.of(context).size.height * 0.4,
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_back, size: 40, color: Colors.black54),
+                  icon: const Icon(Icons.arrow_back,
+                      size: 40, color: Colors.black54),
                   onPressed: () {
                     goToPage(_currentPage - 1);
                   },
@@ -112,7 +163,8 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                 right: 10,
                 top: MediaQuery.of(context).size.height * 0.4,
                 child: IconButton(
-                  icon: const Icon(Icons.arrow_forward, size: 40, color: Colors.black54),
+                  icon: const Icon(Icons.arrow_forward,
+                      size: 40, color: Colors.black54),
                   onPressed: () {
                     goToPage(_currentPage + 1);
                   },
@@ -128,11 +180,9 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
             if (!votingEnded)
               Align(
                 alignment: Alignment.center,
-                child:
-                SizedBox(
-                  width:MediaQuery.of(context).size.width*(7/8),
-                  child:
-                  PageView.builder(
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * (7 / 8),
+                  child: PageView.builder(
                     controller: _pageController,
                     itemCount: robots.length,
                     onPageChanged: (index) {
@@ -146,7 +196,11 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                         name: robot['name'],
                         imagePath: robot['image'],
                         currentRating: robot['rating'],
-                        onRatingSelected: (rating) => updateRating(index, rating),
+                        hat: robot['hat'],
+                        head: robot['head'],
+                        neck: robot['neck'],
+                        onRatingSelected: (rating) =>
+                            updateRating(index, rating),
                       );
                     },
                   ),
@@ -155,16 +209,17 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
             if (votingEnded)
               Align(
                 alignment: Alignment.topCenter,
-              child:
-              FadeTransition(
-                opacity: AnimationController(
-                  vsync: this,
-                  duration: const Duration(seconds: 1),
-                )..forward(),
-                child: Column(
+                child: FadeTransition(
+                  opacity: AnimationController(
+                    vsync: this,
+                    duration: const Duration(seconds: 1),
+                  )..forward(),
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       const Text(
                         "🏆 Top Robots!",
                         style: TextStyle(
@@ -209,10 +264,9 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                   ),
                 ),
               ),
-
             Positioned(
               top: MediaQuery.of(context).size.height * 0.72,
-              left: MediaQuery.of(context).size.width * 0.5-150,
+              left: MediaQuery.of(context).size.width * 0.5 - 150,
               child: Stack(
                 alignment: Alignment.topCenter,
                 children: [
@@ -269,12 +323,16 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            Positioned(top: 20, left: 20, child: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),),
+            Positioned(
+              top: 20,
+              left: 20,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -308,8 +366,7 @@ Widget buildPodium({
             height: 300,
             width: 200,
             fit: BoxFit.cover,
-          )
-      ),
+          )),
       Stack(
         alignment: Alignment.topCenter,
         children: [
@@ -344,12 +401,18 @@ class RobotCard extends StatelessWidget {
   final String imagePath;
   final int currentRating;
   final Function(int) onRatingSelected;
+  final String hat;
+  final String head;
+  final String neck;
 
   RobotCard({
     required this.name,
     required this.imagePath,
     required this.currentRating,
     required this.onRatingSelected,
+    required this.hat,
+    required this.head,
+    required this.neck,
   });
 
   @override
@@ -364,7 +427,10 @@ class RobotCard extends StatelessWidget {
               SizedBox(height: 30),
               Text(
                 name,
-                style: const TextStyle(fontSize: 50, fontWeight: FontWeight.bold, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 50,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
               ),
               const SizedBox(height: 75),
               // Star rating
@@ -381,23 +447,18 @@ class RobotCard extends StatelessWidget {
                   );
                 }),
               ),
-              const SizedBox(height: 110),
+              //const SizedBox(height: 110),
               ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    imagePath,
-                    height: (MediaQuery.of(context).size.height) * 0.3,
-                    width: 200,
-                    fit: BoxFit.cover,
-                  )
+                borderRadius: BorderRadius.circular(12),
+                child: RobotCostumes.drawRobot(
+                  RobotCostumes(250, imagePath, hat, head, neck),
+                ),
               ),
-              // Robot image
-              const SizedBox(height: 20),
             ],
           ),
         ),
         // Crowd at the bottom
-    ],
+      ],
     );
   }
 }
@@ -425,11 +486,10 @@ class StagePainter extends CustomPainter {
     rightCurtainPath.close();
     canvas.drawPath(rightCurtainPath, paint);
 
-
     // Draw the stage floor
     paint.color = Colors.brown[800]!;
-    canvas.drawRect(Rect.fromLTRB(0, size.height * 0.7, size.width, size.height), paint);
-
+    canvas.drawRect(
+        Rect.fromLTRB(0, size.height * 0.7, size.width, size.height), paint);
   }
 
   @override
