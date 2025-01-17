@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class VotingPage extends StatefulWidget {
+  const VotingPage({super.key});
+
   @override
   _VotingPageState createState() => _VotingPageState();
 }
@@ -217,7 +219,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       const Text(
@@ -415,7 +417,8 @@ class RobotCard extends StatelessWidget {
   final String head;
   final String neck;
 
-  RobotCard({
+  const RobotCard({
+    super.key,
     required this.name,
     required this.imagePath,
     required this.currentRating,
@@ -434,7 +437,7 @@ class RobotCard extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 name,
                 style: const TextStyle(

@@ -6,8 +6,8 @@ class RobotCostumes {
   String headDecorImage = '';
   String neckDecorImage = '';
 
-  RobotCostumes(this.robotImage, this.hatImage,
-      this.headDecorImage, this.neckDecorImage);
+  RobotCostumes(
+      this.robotImage, this.hatImage, this.headDecorImage, this.neckDecorImage);
 
   static Widget drawRobot(RobotCostumes robot, double size) {
     Offset hatOffset = Offset(0, 0);
@@ -47,67 +47,66 @@ class RobotCostumes {
     return Container(
         width: size,
         child: Stack(
-      children: [
-        Align(
-            alignment: Alignment.topCenter,
-            child: Transform.translate(
-              offset: Offset(0, size / 6),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    robot.robotImage,
-                    height: size,
-                    width: size,
-                    fit: BoxFit.cover,
-                  )),
-            )),
-        if (robot.hatImage != '')
-          Align(
-            alignment: Alignment.topCenter,
-            child: Transform.translate(
-              offset: hatOffset,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    robot.hatImage,
-                    height: size * hatSize,
-                    width: size * hatSize,
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ),
-        if (robot.headDecorImage != '')
-          Align(
-            alignment: Alignment.topCenter,
-            child: Transform.translate(
-              offset: headOffset,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    robot.headDecorImage,
-                    height: size * headSize,
-                    width: size * headSize,
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ),
-        if (robot.neckDecorImage != '')
-          Align(
-            alignment: Alignment.topCenter,
-            child: Transform.translate(
-              offset: neckOffset,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset(
-                    robot.neckDecorImage,
-                    height: size * neckSize,
-                    width: size * neckSize,
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ),
-      ],
-        )
-    );
+          children: [
+            Align(
+                alignment: Alignment.topCenter,
+                child: Transform.translate(
+                  offset: Offset(0, size / 6),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        robot.robotImage,
+                        height: size,
+                        width: size,
+                        fit: BoxFit.cover,
+                      )),
+                )),
+            if (robot.hatImage != '')
+              Align(
+                alignment: Alignment.topCenter,
+                child: Transform.translate(
+                  offset: hatOffset,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        robot.hatImage,
+                        height: size * hatSize,
+                        width: size * hatSize,
+                        fit: BoxFit.cover,
+                      )),
+                ),
+              ),
+            if (robot.headDecorImage != '')
+              Align(
+                alignment: Alignment.topCenter,
+                child: Transform.translate(
+                  offset: headOffset,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        robot.headDecorImage,
+                        height: size * headSize,
+                        width: size * headSize,
+                        fit: BoxFit.cover,
+                      )),
+                ),
+              ),
+            if (robot.neckDecorImage != '')
+              Align(
+                alignment: Alignment.topCenter,
+                child: Transform.translate(
+                  offset: neckOffset,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        robot.neckDecorImage,
+                        height: size * neckSize,
+                        width: size * neckSize,
+                        fit: BoxFit.cover,
+                      )),
+                ),
+              ),
+          ],
+        ));
   }
 }
