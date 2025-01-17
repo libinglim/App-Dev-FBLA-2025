@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 
 class RobotCostumes {
-  double robotSize = 0;
   String robotImage = '';
   String hatImage = '';
   String headDecorImage = '';
   String neckDecorImage = '';
 
-  RobotCostumes(this.robotSize, this.robotImage, this.hatImage,
+  RobotCostumes(this.robotImage, this.hatImage,
       this.headDecorImage, this.neckDecorImage);
 
-  static Widget drawRobot(RobotCostumes robot) {
+  static Widget drawRobot(RobotCostumes robot, double size) {
     Offset hatOffset = Offset(0, 0);
     Offset headOffset = Offset(0, 0);
     Offset neckOffset = Offset(0, 0);
@@ -19,44 +18,46 @@ class RobotCostumes {
     double neckSize = 0.4;
 
     if (robot.robotImage == 'images/OvalRobot.png') {
-      hatOffset = Offset(robot.robotSize * 0.04, 0);
-      headOffset = Offset(robot.robotSize * 0.04, robot.robotSize * 0.27);
-      neckOffset = Offset(robot.robotSize * 0.04, robot.robotSize * 0.4);
+      hatOffset = Offset(size * 0.04, 0);
+      headOffset = Offset(size * 0.04, size * 0.27);
+      neckOffset = Offset(size * 0.04, size * 0.4);
     } else if (robot.robotImage == 'images/robot.png') {
       hatOffset = Offset(0, 0);
       headSize = 0.5;
-      headOffset = Offset(0, robot.robotSize * 0.33);
-      neckOffset = Offset(0, robot.robotSize * 0.5);
+      headOffset = Offset(0, size * 0.33);
+      neckOffset = Offset(0, size * 0.5);
     } else if (robot.robotImage == 'images/FemaleRobot.png') {
       hatOffset = Offset(0, 0);
-      headOffset = Offset(0, robot.robotSize * 0.33);
-      neckOffset = Offset(0, robot.robotSize * 0.45);
+      headOffset = Offset(0, size * 0.33);
+      neckOffset = Offset(0, size * 0.45);
     } else if (robot.robotImage == 'images/RadRobot.png') {
-      hatOffset = Offset(-(robot.robotSize * 0.02), 0);
-      headOffset = Offset(-(robot.robotSize * 0.01), robot.robotSize * 0.27);
-      neckOffset = Offset(-(robot.robotSize * 0.02), robot.robotSize * 0.40);
+      hatOffset = Offset(-(size * 0.02), 0);
+      headOffset = Offset(-(size * 0.01), size * 0.27);
+      neckOffset = Offset(-(size * 0.02), size * 0.40);
     } else if (robot.robotImage == 'images/WinkingRobot.png') {
       headSize = 0.5;
       hatOffset = Offset(0, 0);
-      headOffset = Offset(0, robot.robotSize * 0.25);
-      neckOffset = Offset(0, robot.robotSize * 0.40);
+      headOffset = Offset(0, size * 0.25);
+      neckOffset = Offset(0, size * 0.40);
     } else if (robot.robotImage == 'images/SquareRobot.png') {
       hatOffset = Offset(0, 0);
-      headOffset = Offset(0, robot.robotSize * 0.34);
-      neckOffset = Offset(0, robot.robotSize * 0.47);
+      headOffset = Offset(0, size * 0.34);
+      neckOffset = Offset(0, size * 0.47);
     }
-    return Stack(
+    return Container(
+        width: size,
+        child: Stack(
       children: [
         Align(
             alignment: Alignment.topCenter,
             child: Transform.translate(
-              offset: Offset(0, robot.robotSize / 6),
+              offset: Offset(0, size / 6),
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     robot.robotImage,
-                    height: robot.robotSize,
-                    width: robot.robotSize,
+                    height: size,
+                    width: size,
                     fit: BoxFit.cover,
                   )),
             )),
@@ -69,8 +70,8 @@ class RobotCostumes {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     robot.hatImage,
-                    height: robot.robotSize * hatSize,
-                    width: robot.robotSize * hatSize,
+                    height: size * hatSize,
+                    width: size * hatSize,
                     fit: BoxFit.cover,
                   )),
             ),
@@ -84,8 +85,8 @@ class RobotCostumes {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     robot.headDecorImage,
-                    height: robot.robotSize * headSize,
-                    width: robot.robotSize * headSize,
+                    height: size * headSize,
+                    width: size * headSize,
                     fit: BoxFit.cover,
                   )),
             ),
@@ -99,13 +100,14 @@ class RobotCostumes {
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
                     robot.neckDecorImage,
-                    height: robot.robotSize * neckSize,
-                    width: robot.robotSize * neckSize,
+                    height: size * neckSize,
+                    width: size * neckSize,
                     fit: BoxFit.cover,
                   )),
             ),
           ),
       ],
+        )
     );
   }
 }

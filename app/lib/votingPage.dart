@@ -73,7 +73,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
   late PageController _pageController;
   int _currentPage = 0;
   late Timer _timer;
-  int _secondsRemaining = 30;
+  int _secondsRemaining = 5;
   bool votingEnded = false;
 
   @override
@@ -235,8 +235,12 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                         children: [
                           // Second place
                           buildPodium(
-                            robotName: robots[0]['name'],
-                            imagePath: robots[0]['image'],
+                            robotName: robots[2]['name'],
+                            robot: RobotCostumes(
+                                robots[4]['image'],
+                                robots[4]['hat'],
+                                robots[4]['head'],
+                                robots[4]['neck']),
                             rank: 2,
                             height: 200,
                             color: Colors.grey[700]!,
@@ -244,7 +248,11 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                           // First place
                           buildPodium(
                             robotName: robots[3]['name'],
-                            imagePath: robots[3]['image'],
+                            robot: RobotCostumes(
+                                robots[3]['image'],
+                                robots[3]['hat'],
+                                robots[3]['head'],
+                                robots[3]['neck']),
                             rank: 1,
                             height: 250,
                             color: Colors.yellow,
@@ -252,7 +260,11 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                           // Third place
                           buildPodium(
                             robotName: robots[6]['name'],
-                            imagePath: robots[6]['image'],
+                            robot: RobotCostumes(
+                                robots[6]['image'],
+                                robots[6]['hat'],
+                                robots[6]['head'],
+                                robots[6]['neck']),
                             rank: 3,
                             height: 150,
                             color: Colors.orange,
@@ -342,58 +354,56 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
 
 Widget buildPodium({
   required String robotName,
-  required String imagePath,
+  required RobotCostumes robot,
   required int rank,
   required double height,
   required Color color,
 }) {
-  return Column(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Text(
-        robotName,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(height: 5),
-      ClipRRect(
-          borderRadius: BorderRadius.circular(12),
-          child: Image.asset(
-            imagePath,
-            height: 300,
-            width: 200,
-            fit: BoxFit.cover,
-          )),
-      Stack(
-        alignment: Alignment.topCenter,
-        children: [
-          Container(
-            width: 200,
-            height: height,
-            color: color,
+  return Stack(children: [
+    Align(
+      alignment: Alignment.topCenter,
+        child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          robotName,
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
-          Positioned(
-            top: 20,
-            child: CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Text(
-                "$rank",
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+        ),
+        RobotCostumes.drawRobot(robot, 300),
+        const SizedBox(height: 49),
+        Stack(
+          alignment: Alignment.topCenter,
+          children: [
+            Container(
+              width: 300,
+              height: height - 50,
+              color: color,
+            ),
+            Positioned(
+              top: 20,
+              child: CircleAvatar(
+                radius: 20,
+                backgroundColor: Colors.white,
+                child: Text(
+                  "$rank",
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    ],
-  );
+          ],
+        ),
+
+      ],
+    ))
+  ]);
 }
 
 class RobotCard extends StatelessWidget {
@@ -447,13 +457,9 @@ class RobotCard extends StatelessWidget {
                   );
                 }),
               ),
-              //const SizedBox(height: 110),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: RobotCostumes.drawRobot(
-                  RobotCostumes(250, imagePath, hat, head, neck),
-                ),
-              ),
+              const SizedBox(height: 100),
+              RobotCostumes.drawRobot(
+                  RobotCostumes(imagePath, hat, head, neck), 250),
             ],
           ),
         ),

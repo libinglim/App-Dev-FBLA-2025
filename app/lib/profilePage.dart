@@ -112,7 +112,7 @@ class _ProfilePageState extends State<ProfilePage>
                           ClipOval(
                             child: SizedBox(
                               child: RobotCostumes.drawRobot(
-                                  Globals.selectedRobot),
+                                  Globals.selectedRobot, 200),
                               height: 180,
                               width: 150,
                             ),
@@ -161,11 +161,10 @@ class _ProfilePageState extends State<ProfilePage>
                         ),
                         itemBuilder: (context, index) {
                           RobotCostumes robot = RobotCostumes(
-                              250,
                               Globals.robots[index],
-                              Globals.equippedHat,
-                              Globals.equippedHead,
-                              Globals.equippedNeck);
+                              Globals.selectedRobot.hatImage,
+                              Globals.selectedRobot.headDecorImage,
+                              Globals.selectedRobot.neckDecorImage);
                           bool isSelected = robot == Globals.selectedRobot;
                           return GestureDetector(
                             onTap: () => selectRobot(robot),
@@ -195,7 +194,7 @@ class _ProfilePageState extends State<ProfilePage>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Expanded(
-                                    child: RobotCostumes.drawRobot(robot),
+                                    child: RobotCostumes.drawRobot(robot, 250),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(

@@ -16,11 +16,11 @@ class _InventoryPageState extends State<InventoryPage> {
   void _equipAccessory(String selectedAccessory) {
     if (selectedAccessory.isNotEmpty) {
       if (selectedAccessory.contains('Hat')) {
-        Globals.equippedHat = selectedAccessory;
+        Globals.selectedRobot.hatImage = selectedAccessory;
       } else if (selectedAccessory.contains('Head')) {
-        Globals.equippedHead = selectedAccessory;
+        Globals.selectedRobot.headDecorImage = selectedAccessory;
       } else if (selectedAccessory.contains('Neck')) {
-        Globals.equippedNeck = selectedAccessory;
+        Globals.selectedRobot.neckDecorImage = selectedAccessory;
       }
     }
   }
@@ -99,9 +99,9 @@ class _InventoryPageState extends State<InventoryPage> {
                     return index == Globals.accessories.length
                         ? ElevatedButton(
                             onPressed: () {
-                              Globals.equippedHat = '';
-                              Globals.equippedHead = '';
-                              Globals.equippedNeck = '';
+                              Globals.selectedRobot.hatImage = '';
+                              Globals.selectedRobot.headDecorImage = '';
+                              Globals.selectedRobot.neckDecorImage = '';
                               setState(() {});
                             },
                             style: ElevatedButton.styleFrom(
@@ -173,16 +173,6 @@ class _InventoryItemCard extends State<InventoryItemCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => InventoryItemDetail(
-              itemName: widget.itemName,
-              imagePath: widget.imagePath,
-            ),
-          ),
-        );
-        setState(() {});
       },
       child: AnimatedScale(
         scale: 1.0,
@@ -197,11 +187,10 @@ class _InventoryItemCard extends State<InventoryItemCard> {
             children: [
               Expanded(
                 child: RobotCostumes.drawRobot(RobotCostumes(
-                    400,
                     widget.imagePath,
-                    Globals.equippedHat,
-                    Globals.equippedHead,
-                    Globals.equippedNeck)),
+                    Globals.selectedRobot.hatImage,
+                    Globals.selectedRobot.headDecorImage,
+                    Globals.selectedRobot.neckDecorImage), 400),
               ),
               Container(
                 padding: const EdgeInsets.all(6),
@@ -255,20 +244,20 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
   @override
   void initState() {
     super.initState();
-    robot = RobotCostumes(400, widget.imagePath, '', '', '');
+    robot = RobotCostumes(widget.imagePath, '', '', '');
   }
 
   void _equipAccessory() {
     if (selectedAccessory.isNotEmpty) {
       if (selectedAccessory.contains('Hat')) {
         robot.hatImage = selectedAccessory;
-        Globals.equippedHat = selectedAccessory;
+        Globals.selectedRobot.hatImage = selectedAccessory;
       } else if (selectedAccessory.contains('Head')) {
         robot.headDecorImage = selectedAccessory;
-        Globals.equippedHead = selectedAccessory;
+        Globals.selectedRobot.headDecorImage = selectedAccessory;
       } else if (selectedAccessory.contains('Neck')) {
         robot.neckDecorImage = selectedAccessory;
-        Globals.equippedNeck = selectedAccessory;
+        Globals.selectedRobot.neckDecorImage = selectedAccessory;
       }
     }
   }
@@ -309,7 +298,7 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
           children: [
             SizedBox(),
             Expanded(
-              child: RobotCostumes.drawRobot(robot),
+              child: RobotCostumes.drawRobot(robot, 400),
             ),
             // Main content area (Robot preview)
 

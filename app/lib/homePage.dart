@@ -149,7 +149,7 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   builder: (context, child) {
                     return Transform.translate(
                       offset: Offset(0, -_animation.value),
-                      child: RobotCostumes.drawRobot(Globals.selectedRobot),
+                      child: RobotCostumes.drawRobot(Globals.selectedRobot, 200),
                     );
                   },
                 ),
@@ -176,14 +176,15 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 ),
                 const SizedBox(height: 20),
                 buildMenuButton(
-                  'Inventory',
-                  Icons.inventory,
-                  Colors.greenAccent,
-                  () => Navigator.push(
+                    'Inventory', Icons.inventory, Colors.greenAccent, () async {
+                  await Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => InventoryPage()),
-                  ),
-                ),
+                  );
+                  setState(() {
+
+                  });
+                }),
                 const SizedBox(height: 20),
                 buildMenuButton(
                   'Shop',

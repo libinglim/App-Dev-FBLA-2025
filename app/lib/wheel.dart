@@ -24,14 +24,18 @@ class _WheelPageState extends State<WheelPage> {
     super.initState();
     confettiController =
         ConfettiController(duration: const Duration(seconds: 3));
-
+    for (int i = 0; i < Globals.availableItems.length; i++) {
+      if (Globals.accessories.contains(Globals.availableItems[i])) {
+        Globals.availableItems.removeAt(i);
+      }
+    }
     if (Globals.availableItems.isEmpty) {
       Globals.availableItems = [
-        'images/Scarf.png',
+        'images/ScarfNeck.png',
         'images/SantaHat.png',
-        'images/Monocle.png',
-        'images/RadGlasses.png',
-        'images/Beanie.png',
+        'images/MonocleHead.png',
+        'images/RadGlassesHead.png',
+        'images/BeanieHat.png',
         'images/TopHat.png',
       ];
     }
@@ -58,7 +62,7 @@ class _WheelPageState extends State<WheelPage> {
       Future.delayed(const Duration(seconds: 5), () {
         if (mounted) {
           final wonItem = Globals.availableItems[selectedIndex];
-          Globals.inventory.add(wonItem);
+          Globals.accessories.add(wonItem);
           Globals.availableItems.removeAt(selectedIndex);
 
           confettiController.play();
@@ -106,6 +110,7 @@ class _WheelPageState extends State<WheelPage> {
                         setState(() {
                           spinning = false;
                         });
+
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,

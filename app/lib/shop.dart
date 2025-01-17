@@ -91,7 +91,6 @@ class ShopPageState extends State<ShopPage> {
           children: [
             Expanded(
                 child: RobotCostumes.drawRobot(RobotCostumes(
-                    (MediaQuery.of(context).size.height) / 2,
                     currentRobotImage,
                     selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '',
                     selectedCategory == 'Head Decor'
@@ -99,7 +98,7 @@ class ShopPageState extends State<ShopPage> {
                         : '',
                     selectedCategory == 'Neck Decor'
                         ? (hoveredItemImage ?? '')
-                        : '')) /*Stack(
+                        : ''), (MediaQuery.of(context).size.height) / 2,) /*Stack(
               alignment: Alignment.center,
               children: [
                 Image.asset(currentRobotImage),
@@ -168,11 +167,6 @@ class ShopPageState extends State<ShopPage> {
     });
   }
 
-  void _addRobotToMergeList(String robotImage) {
-    if (!Globals.mergedRobots.contains(robotImage)) {
-      Globals.mergedRobots.add(robotImage); // Adds robot image to the list
-    }
-  }
 
   Widget _buildCategorySpecificPosition(String category) {
     Offset position =
@@ -236,6 +230,9 @@ class ShopPageState extends State<ShopPage> {
   }
 
   void _showPurchaseDialog(BuildContext context, Item item) {
+    if (Globals.accessories.contains(item.image)) {
+      item.isPurchased = true;
+    }
     showDialog(
       context: context,
       builder: (context) {
@@ -268,7 +265,7 @@ class ShopPageState extends State<ShopPage> {
                     setState(() {
                       Globals.coins -= item.price;
                       item.isPurchased = true;
-                      Globals.inventory.add(item.image);
+                      Globals.accessories.add(item.image);
                     });
                     Navigator.pop(context);
                     _showSuccessDialog(context, item);
@@ -296,12 +293,6 @@ class ShopPageState extends State<ShopPage> {
             TextButton(
               onPressed: () {
                 // Automatically add the purchased item to accessories
-                setState(() {
-                  Globals.accessories.add(item.image);
-                });
-
-                // Merge the robot image with the new accessory (if needed)
-                _mergeAndSaveRobot(item);
 
                 // Close the dialog
                 Navigator.pop(context);
@@ -312,23 +303,6 @@ class ShopPageState extends State<ShopPage> {
         );
       },
     );
-  }
-
-  void _mergeAndSaveRobot(Item item) {
-    // Merge the robot image with the selected item
-    String mergedRobotImage = _mergeImages(currentRobotImage, item.image);
-
-    // Save the merged robot image into Globals.mergeRobots
-    if (!Globals.mergedRobots.contains(mergedRobotImage)) {
-      Globals.mergedRobots.add(mergedRobotImage);
-    }
-  }
-
-  String _mergeImages(String robotImage, String accessoryImage) {
-    // Logic to merge the robot image with the accessory image
-    // You might need to perform image processing here (like overlaying the images)
-    // For now, we'll simulate it by concatenating the filenames (you can replace this with actual image processing code)
-    return '$robotImage + $accessoryImage'; // Simulating merged image by name
   }
 
   void _showInsufficientFundsDialog(BuildContext context) {
@@ -351,6 +325,9 @@ class ShopPageState extends State<ShopPage> {
   }
 
   Widget _buildItemCard(Item item) {
+    if (Globals.accessories.contains(item.image)) {
+      item.isPurchased = true;
+    }
     return MouseRegion(
       onEnter: (_) => _onItemHover(item.image),
       onExit: (_) => _onItemHover(null),
