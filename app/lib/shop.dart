@@ -1,8 +1,5 @@
-import 'package:app/robotCostumes.dart';
 import 'package:flutter/material.dart';
-import 'globals.dart';
 
-// Global variable to keep track of the user's coins
 int coins = 100000;
 
 class ShopPage extends StatefulWidget {
@@ -36,15 +33,6 @@ class ShopPageState extends State<ShopPage> {
   String selectedCategory = 'Hats';
   String? hoveredItemImage;
   String currentRobotImage = 'images/RadRobot.png';
-
-  final List<String> robotImages = [
-    'images/robot.png',
-    'images/FemaleRobot.png',
-    'images/RadRobot.png',
-    'images/SquareRobot.png',
-    'images/WinkingRobot.png',
-    'images/OvalRobot.png',
-  ];
 
   final Map<String, Map<String, Offset>> accessoryPositions = {
     'images/robot.png': {
@@ -85,71 +73,25 @@ class ShopPageState extends State<ShopPage> {
       appBar: AppBar(
         title: const Text('Shop', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.deepPurple,
+        elevation: 4,
       ),
-      body: Center(
-        child: Row(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.deepPurple, Colors.black],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Column(
           children: [
+            _buildCoinDisplay(),
+            _buildTopButtonsRow(),
             Expanded(
-                child: RobotCostumes.drawRobot(RobotCostumes(
-                    currentRobotImage,
-                    selectedCategory == 'Hats' ? (hoveredItemImage ?? '') : '',
-                    selectedCategory == 'Head Decor'
-                        ? (hoveredItemImage ?? '')
-                        : '',
-                    selectedCategory == 'Neck Decor'
-                        ? (hoveredItemImage ?? '')
-                        : ''), (MediaQuery.of(context).size.height) / 2,) /*Stack(
-              alignment: Alignment.center,
-              children: [
-                Image.asset(currentRobotImage),
-                if (hoveredItemImage != null)
-                  _buildCategorySpecificPosition(selectedCategory),
-              ],
-            ),*/
-                ),
-            Expanded(
-              child: Column(
+              child: Row(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        onPressed: _switchRobot,
-                        child: const Text('Switch Robot'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.purpleAccent,
-                        ),
-                      ),
-                      ...categories.keys.map(_buildSegmentButton).toList(),
-                    ],
-                  ),
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Colors.deepPurple, Colors.blue],
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                            ),
-                          ),
-                        ),
-                        ListView.builder(
-                          itemCount: categories[selectedCategory]?.length ?? 0,
-                          itemBuilder: (context, index) {
-                            final item = categories[selectedCategory]![index];
-                            return _buildItemCard(item);
-                          },
-                        ),
-                        Positioned(
-                          top: 20,
-                          left: 20,
-                          child: _buildCoinDisplay(),
-                        ),
-                      ],
-                    ),
-                  ),
+                  _buildRobotPreview(),
+                  _buildShopItems(),
                 ],
               ),
             ),
@@ -159,211 +101,195 @@ class ShopPageState extends State<ShopPage> {
     );
   }
 
+  Widget _buildCoinDisplay() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.amber,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.amber.withOpacity(0.6),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.attach_money, color: Colors.white, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              '$coins',
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopButtonsRow() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: _switchRobot,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.deepPurpleAccent,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: const Text('Switch Robot',
+                style: TextStyle(color: Colors.white)),
+          ),
+          ...categories.keys.map((category) {
+            return ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  selectedCategory = category;
+                });
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: selectedCategory == category
+                    ? Colors.green
+                    : Colors.deepPurpleAccent,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              child: Text(
+                category,
+                style: const TextStyle(color: Colors.white),
+              ),
+            );
+          }).toList(),
+        ],
+      ),
+    );
+  }
+
   void _switchRobot() {
+    // Add logic to switch between robot models
+    List<String> robotImages = [
+      'images/robot.png',
+      'images/FemaleRobot.png',
+      'images/RadRobot.png',
+      'images/SquareRobot.png',
+      'images/WinkingRobot.png',
+      'images/OvalRobot.png',
+    ];
     setState(() {
-      int nextIndex =
-          (robotImages.indexOf(currentRobotImage) + 1) % robotImages.length;
-      currentRobotImage = robotImages[nextIndex];
+      // Rotate through robot images
+      int currentIndex = robotImages.indexOf(currentRobotImage);
+      currentRobotImage = robotImages[(currentIndex + 1) % robotImages.length];
     });
   }
 
+  Widget _buildRobotPreview() {
+    return Expanded(
+      flex: 1,
+      child: Center(
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Image.asset(currentRobotImage),
+            if (hoveredItemImage != null) _buildAccessoryImage(),
+          ],
+        ),
+      ),
+    );
+  }
 
-  Widget _buildCategorySpecificPosition(String category) {
-    Offset position =
-        accessoryPositions[currentRobotImage]?[category] ?? Offset(0, 0);
+  Widget _buildAccessoryImage() {
+    final Offset position = accessoryPositions[currentRobotImage]
+            ?[selectedCategory] ??
+        const Offset(0, 0);
 
     return Positioned(
+      left: position.dx - 75,
       top: position.dy,
-      left: position.dx,
       child: Image.asset(
-        hoveredItemImage ?? '',
+        hoveredItemImage!,
         height: 165,
         width: 165,
       ),
     );
   }
 
-  Widget _buildSegmentButton(String category) {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          selectedCategory = category;
-        });
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor:
-            selectedCategory == category ? Colors.green : Colors.blueAccent,
-      ),
-      child: Text(category),
-    );
-  }
-
-  Widget _buildCoinDisplay() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.yellow[700],
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.yellow[700]!,
-            blurRadius: 5,
-            spreadRadius: 1,
-          ),
-        ],
-      ),
-      child: Row(
+  Widget _buildShopItems() {
+    return Expanded(
+      flex: 2,
+      child: Column(
         children: [
-          Icon(Icons.attach_money, color: Colors.green[700], size: 24),
-          const SizedBox(width: 5),
-          Text(
-            '${Globals.coins}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: categories[selectedCategory]?.length ?? 0,
+              itemBuilder: (context, index) {
+                final item = categories[selectedCategory]![index];
+                return MouseRegion(
+                  onEnter: (_) => _onItemHover(item.image),
+                  onExit: (_) => _onItemHover(null),
+                  child: GestureDetector(
+                    onTap: () => _showPurchaseDialog(context, item),
+                    child: _buildItemCard(item),
+                  ),
+                );
+              },
             ),
           ),
         ],
       ),
-    );
-  }
-
-  void _showPurchaseDialog(BuildContext context, Item item) {
-    if (Globals.accessories.contains(item.image)) {
-      item.isPurchased = true;
-    }
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text('Purchase ${item.name}'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Image.asset(item.image, height: 100, width: 100),
-              const SizedBox(height: 10),
-              Text('Price: \$${item.price}'),
-              SizedBox(height: 10),
-              Text('You have ${Globals.coins} coins available.'),
-              if (item.isPurchased)
-                const Text(
-                  'You have already purchased this item.',
-                  style: TextStyle(color: Colors.red),
-                ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('Cancel'),
-            ),
-            if (!item.isPurchased)
-              TextButton(
-                onPressed: () {
-                  if (Globals.coins >= item.price) {
-                    setState(() {
-                      Globals.coins -= item.price;
-                      item.isPurchased = true;
-                      Globals.accessories.add(item.image);
-                    });
-                    Navigator.pop(context);
-                    _showSuccessDialog(context, item);
-                  } else {
-                    Navigator.pop(context);
-                    _showInsufficientFundsDialog(context);
-                  }
-                },
-                child: const Text('Buy'),
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showSuccessDialog(BuildContext context, Item item) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Purchase Successful'),
-          content: Text('You have successfully purchased ${item.name}.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                // Automatically add the purchased item to accessories
-
-                // Close the dialog
-                Navigator.pop(context);
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _showInsufficientFundsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Insufficient Funds'),
-          content:
-              const Text('You do not have enough coins to purchase this item.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
     );
   }
 
   Widget _buildItemCard(Item item) {
-    if (Globals.accessories.contains(item.image)) {
-      item.isPurchased = true;
-    }
-    return MouseRegion(
-      onEnter: (_) => _onItemHover(item.image),
-      onExit: (_) => _onItemHover(null),
-      child: GestureDetector(
-        onTap: () => _showPurchaseDialog(context, item),
-        child: Card(
-          margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-          elevation: 5,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            children: [
-              Image.asset(item.image, height: 100, width: 100),
-              Text(
-                item.name,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  decoration: item.isPurchased
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+    return Card(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Row(
+          children: [
+            Image.asset(item.image, height: 80, width: 80),
+            const SizedBox(width: 16),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Text(
-                '\$${item.price}',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.green,
-                  decoration: item.isPurchased
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none,
+                Text(
+                  '\$${item.price}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: item.isPurchased ? Colors.grey : Colors.green,
+                    decoration: item.isPurchased
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -373,6 +299,47 @@ class ShopPageState extends State<ShopPage> {
     setState(() {
       hoveredItemImage = imagePath;
     });
+  }
+
+  void _showPurchaseDialog(BuildContext context, Item item) {
+    if (item.isPurchased) {
+      _showErrorDialog(context, '${item.name} is already purchased.');
+      return;
+    }
+
+    if (item.price > coins) {
+      _showErrorDialog(context, 'Not enough coins to purchase ${item.name}.');
+      return;
+    }
+
+    setState(() {
+      coins -= item.price;
+      item.isPurchased = true;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Successfully purchased ${item.name}!'),
+      ),
+    );
+  }
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 

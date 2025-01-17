@@ -3,6 +3,8 @@ import 'globals.dart';
 import 'package:app/robotCostumes.dart';
 
 class InventoryPage extends StatefulWidget {
+  const InventoryPage({super.key});
+
   @override
   State<InventoryPage> createState() => _InventoryPageState();
 }
@@ -106,7 +108,7 @@ class _InventoryPageState extends State<InventoryPage> {
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red),
-                            child: Icon(Icons.delete,
+                            child: const Icon(Icons.delete,
                                 size: 24, color: Colors.white),
                           )
                         : Padding(
@@ -296,7 +298,7 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(),
+            const SizedBox(),
             Expanded(
               child: RobotCostumes.drawRobot(robot, 400),
             ),
@@ -362,8 +364,8 @@ class _InventoryItemDetailState extends State<InventoryItemDetail> {
               onPressed: () {
                 _equipAccessory();
               },
-              child: const Icon(Icons.check),
               backgroundColor: Colors.green,
+              child: const Icon(Icons.check),
             )
           : null,
     );

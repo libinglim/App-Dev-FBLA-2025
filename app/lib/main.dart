@@ -1,6 +1,5 @@
 import 'package:app/signInPage.dart';
 import 'package:flutter/material.dart';
-import 'package:app/wheel.dart';
 
 void main() {
   runApp(const MyApp());

@@ -171,7 +171,8 @@ class HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   Colors.purpleAccent,
                   () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const ProfilePage()),
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -7,7 +7,7 @@ class SignInPage extends StatefulWidget {
   @override
   State<SignInPage> createState() => SignInPageState();
 
-  SignInPage({Key? key}) : super(key: key);
+  const SignInPage({Key? key}) : super(key: key);
 }
 
 class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
@@ -27,7 +27,7 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
     passWord = TextEditingController();
     inputModerator = '';
     controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 3));
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
     animation = CurvedAnimation(
       parent: controller,
       curve: Curves.easeIn,
@@ -50,15 +50,15 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
       body: Container(
         child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Form(
               key: _formKey,
               child: Builder(builder: (ctx) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 80),
-                    Text(
+                    const SizedBox(height: 80),
+                    const Text(
                       "Welcome back.",
                       style: TextStyle(
                         fontSize: 32,
@@ -66,15 +66,15 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                         color: Colors.black,
                       ),
                     ),
-                    SizedBox(height: 10),
-                    Text(
+                    const SizedBox(height: 10),
+                    const Text(
                       "Sign in to continue",
                       style: TextStyle(fontSize: 18, color: Colors.black),
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     TextFormField(
                       controller: userName,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: "Enter your username...",
                         fillColor: Colors.white,
                         filled: true,
@@ -89,7 +89,7 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                         }
                       },
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     FormField<bool>(
                       initialValue: true,
                       builder: (state) {
@@ -100,8 +100,8 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                             hintText: "Enter your passcode...",
                             fillColor: Colors.white,
                             filled: true,
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.lock),
+                            border: const OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.lock),
                             suffixIcon: IconButton(
                               icon: Icon(
                                 state.value!
@@ -126,24 +126,24 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                         );
                       },
                     ),
-                    SizedBox(height: 40),
+                    const SizedBox(height: 40),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => HomePage(),
+                            builder: (context) => const HomePage(),
                           ),
                         );
                       },
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 40, vertical: 15),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      child: Text(
+                      child: const Text(
                         'Sign In',
                         style: TextStyle(
                           fontSize: 16,
@@ -151,12 +151,12 @@ class SignInPageState extends State<SignInPage> with TickerProviderStateMixin {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       inputModerator,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
-                    SizedBox(height: 90),
+                    const SizedBox(height: 90),
                   ],
                 );
               }),
