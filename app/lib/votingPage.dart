@@ -75,7 +75,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
   late PageController _pageController;
   int _currentPage = 0;
   late Timer _timer;
-  int _secondsRemaining = 5;
+  int _secondsRemaining = 20;
   bool votingEnded = false;
 
   @override
@@ -237,7 +237,7 @@ class _VotingPageState extends State<VotingPage> with TickerProviderStateMixin {
                         children: [
                           // Second place
                           buildPodium(
-                            robotName: robots[2]['name'],
+                            robotName: robots[4]['name'],
                             robot: RobotCostumes(
                                 robots[4]['image'],
                                 robots[4]['hat'],

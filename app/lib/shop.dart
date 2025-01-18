@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'globals.dart';
 import 'homePage.dart';
 
-int coins = 100000;
 
 class ShopPage extends StatefulWidget {
   const ShopPage({Key? key}) : super(key: key);
@@ -155,7 +154,7 @@ class ShopPageState extends State<ShopPage> {
             const Icon(Icons.attach_money, color: Colors.white, size: 24),
             const SizedBox(width: 8),
             Text(
-              '$coins',
+              '${Globals.coins}',
               style: const TextStyle(
                 color: Colors.black,
                 fontSize: 20,
@@ -287,6 +286,9 @@ class ShopPageState extends State<ShopPage> {
   }
 
   Widget _buildItemCard(Item item) {
+    if (Globals.accessories.contains(item.image)) {
+      item.isPurchased = true;
+    }
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10),
       elevation: 5,
@@ -334,20 +336,25 @@ class ShopPageState extends State<ShopPage> {
   }
 
   void _showPurchaseDialog(BuildContext context, Item item) {
+    if (Globals.accessories.contains(item.image)) {
+      item.isPurchased = true;
+    }
     if (item.isPurchased) {
       _showErrorDialog(context, '${item.name} is already purchased.');
       return;
     }
 
-    if (item.price > coins) {
-      _showErrorDialog(context, 'Not enough coins to purchase ${item.name}.');
+    if (item.price > Globals.coins) {
+      _showErrorDialog(context, 'Not enough Globals.coins to purchase ${item.name}.');
       return;
     }
-
-    setState(() {
-      coins -= item.price;
-      item.isPurchased = true;
-    });
+    if (Globals.coins >= item.price) {
+      setState(() {
+        Globals.coins -= item.price;
+        item.isPurchased = true;
+        Globals.accessories.add(item.image);
+      });
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

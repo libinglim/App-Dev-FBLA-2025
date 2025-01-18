@@ -4,7 +4,7 @@ import 'package:app/robotCostumes.dart';
 
 class Globals {
   static int coins = 100000;
-  static int spins = 10;
+  static int spins = 0;
   // List to store items that are still available to win
   static List<String> availableItems = [];
   static List<String> robots = [

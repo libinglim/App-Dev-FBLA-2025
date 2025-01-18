@@ -50,7 +50,7 @@ class _QuestionsPageState extends State<QuestionsPage> {
       correctAnswers++;
       Globals.coins += 100;
 
-      if (correctAnswers % 5 == 0) {
+      if (correctAnswers % 2 == 0) {
         Globals.spins++;
         showMessage(
             'Congratulations!', 'You earned +1 spin and advanced a level!');
